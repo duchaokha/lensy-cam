@@ -78,12 +78,15 @@ router.post('/', async (req, res) => {
       condition, description
     } = req.body;
 
+    // Convert empty serial_number to NULL to avoid UNIQUE constraint issues
+    const serialNum = serial_number && serial_number.trim() !== '' ? serial_number : null;
+
     const result = await db.run(
       `INSERT INTO cameras 
        (name, brand, model, category, serial_number, purchase_date, 
         purchase_price, daily_rate, hourly_rate, condition, description, status) 
        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
-      [name, brand, model, category, serial_number, purchase_date,
+      [name, brand, model, category, serialNum, purchase_date,
        purchase_price, daily_rate, hourly_rate, condition || 'excellent', description, 'available']
     );
 
@@ -103,13 +106,16 @@ router.put('/:id', async (req, res) => {
       status, condition, description
     } = req.body;
 
+    // Convert empty serial_number to NULL to avoid UNIQUE constraint issues
+    const serialNum = serial_number && serial_number.trim() !== '' ? serial_number : null;
+
     await db.run(
       `UPDATE cameras SET 
        name = ?, brand = ?, model = ?, category = ?, serial_number = ?,
        purchase_date = ?, purchase_price = ?, daily_rate = ?, hourly_rate = ?,
        status = ?, condition = ?, description = ?
        WHERE id = ?`,
-      [name, brand, model, category, serial_number, purchase_date,
+      [name, brand, model, category, serialNum, purchase_date,
        purchase_price, daily_rate, hourly_rate, status, condition, description, req.params.id]
     );
 
