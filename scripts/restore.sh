@@ -32,21 +32,30 @@ fi
 
 # Stop Docker container if running
 echo "🛑 Stopping application..."
-docker-compose down 2>/dev/null || true
+docker compose down 2>/dev/null || true
+
+# Wait for container to fully stop
+sleep 2
 
 # Backup current database before restore
 if [ -f "database/rental.db" ]; then
     SAFETY_BACKUP="database/rental.db.before-restore-$(date +%Y%m%d-%H%M%S)"
-    cp database/rental.db "${SAFETY_BACKUP}"
+    cp database/rental.db "${SAFETY_BACKUP}" 2>/dev/null || sudo cp database/rental.db "${SAFETY_BACKUP}"
     echo "   Current database backed up to: ${SAFETY_BACKUP}"
 fi
 
-# Restore database
-cp "${BACKUP_FILE}" database/rental.db
-echo "✅ Database restored from: ${BACKUP_FILE}"
+# Restore database (with sudo if needed)
+if cp "${BACKUP_FILE}" database/rental.db 2>/dev/null; then
+    echo "✅ Database restored from: ${BACKUP_FILE}"
+else
+    echo "   Trying with elevated permissions..."
+    sudo cp "${BACKUP_FILE}" database/rental.db
+    sudo chown $(id -u):$(id -g) database/rental.db
+    echo "✅ Database restored from: ${BACKUP_FILE}"
+fi
 
 # Restart Docker container
 echo "🚀 Starting application..."
-docker-compose up -d
+docker compose up -d
 
 echo "✅ Restore complete!"
