@@ -42,6 +42,9 @@ if [ -f "database/rental.db" ]; then
     SAFETY_BACKUP="database/rental.db.before-restore-$(date +%Y%m%d-%H%M%S)"
     cp database/rental.db "${SAFETY_BACKUP}" 2>/dev/null || sudo cp database/rental.db "${SAFETY_BACKUP}"
     echo "   Current database backed up to: ${SAFETY_BACKUP}"
+    
+    # Keep only last 3 before-restore backups
+    ls -t database/rental.db.before-restore-* 2>/dev/null | tail -n +4 | xargs rm -f 2>/dev/null
 fi
 
 # Restore database (with sudo if needed)
