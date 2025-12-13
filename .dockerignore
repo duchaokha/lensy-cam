@@ -1,0 +1,29 @@
+# Node modules
+node_modules
+client/node_modules
+
+# Build outputs
+client/build
+dist
+
+# Database
+rental.db
+
+# Environment files
+.env
+
+# Logs
+*.log
+npm-debug.log*
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode
+.idea
+
+# Documentation (optional - remove if you want docs in image)
+*.md
+!README.md

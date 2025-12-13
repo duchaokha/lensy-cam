@@ -1,0 +1,49 @@
+# Dependencies
+node_modules/
+client/node_modules/
+
+# Environment variables (sensitive)
+.env
+
+# Database files (sensitive data)
+*.db
+*.db-journal
+*.db-shm
+*.db-wal
+database/
+data/
+
+# Backups (may contain sensitive data)
+backups/
+*.backup
+
+# Build outputs
+client/build/
+dist/
+
+# Uploads
+uploads/
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Docker
+docker-compose.override.yml
+
+# Misc
+.env.local
+.env.production
