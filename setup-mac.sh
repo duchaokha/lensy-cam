@@ -75,11 +75,11 @@ if [ ! -f .env ]; then
     # Generate random JWT secret
     JWT_SECRET=$(openssl rand -base64 32)
     
-    # Update .env with generated secret
+    # Update .env with generated secret (using | as delimiter to avoid issues with / in base64)
     if [[ "$OSTYPE" == "darwin"* ]]; then
-        sed -i '' "s/your-secret-key-change-this-in-production/${JWT_SECRET}/" .env
+        sed -i '' "s|your-secret-key-change-this-in-production|${JWT_SECRET}|" .env
     else
-        sed -i "s/your-secret-key-change-this-in-production/${JWT_SECRET}/" .env
+        sed -i "s|your-secret-key-change-this-in-production|${JWT_SECRET}|" .env
     fi
     
     echo -e "${GREEN}✅ .env file created with secure JWT secret${NC}"
