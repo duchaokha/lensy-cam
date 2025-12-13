@@ -97,21 +97,21 @@ echo "📋 Step 3: Starting application with Docker..."
 echo ""
 
 # Stop any existing containers
-docker-compose down 2>/dev/null || true
+docker compose down 2>/dev/null || true
 
 # Build and start
 echo "🔨 Building Docker image (this may take a few minutes)..."
-docker-compose build
+docker compose build
 
 echo "🚀 Starting application..."
-docker-compose up -d
+docker compose up -d
 
 # Wait for container to be healthy
 echo "⏳ Waiting for application to be ready..."
 sleep 5
 
 # Check if container is running
-if docker-compose ps | grep -q "Up"; then
+if docker compose ps | grep -q "Up"; then
     echo ""
     echo -e "${GREEN}════════════════════════════════════════${NC}"
     echo -e "${GREEN}✅ Installation Complete!${NC}"
@@ -127,9 +127,9 @@ if docker-compose ps | grep -q "Up"; then
     echo "⚠️  IMPORTANT: Change the default password after first login!"
     echo ""
     echo "📝 Useful commands:"
-    echo "   View logs:    docker-compose logs -f"
-    echo "   Stop app:     docker-compose down"
-    echo "   Restart app:  docker-compose restart"
+    echo "   View logs:    docker compose logs -f"
+    echo "   Stop app:     docker compose down"
+    echo "   Restart app:  docker compose restart"
     echo "   Backup DB:    ./backup.sh"
     echo "   Restore DB:   ./restore.sh backups/your-backup.db"
     echo ""
@@ -139,6 +139,6 @@ if docker-compose ps | grep -q "Up"; then
     open http://localhost:5000
 else
     echo -e "${RED}❌ Failed to start application${NC}"
-    echo "Check logs with: docker-compose logs"
+    echo "Check logs with: docker compose logs"
     exit 1
 fi

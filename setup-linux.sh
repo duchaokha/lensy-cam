@@ -74,18 +74,13 @@ else
     fi
 fi
 
-# Check docker-compose
-if ! command -v docker-compose &> /dev/null && ! docker compose version &> /dev/null 2>&1; then
-    echo -e "${YELLOW}⚠️  docker-compose not found. Installing...${NC}"
-    if [[ "$OS" == "ubuntu" || "$OS" == "debian" ]]; then
-        sudo apt-get install -y docker-compose
-    else
-        sudo curl -L "https://github.com/docker/compose/releases/latest/download/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
-        sudo chmod +x /usr/local/bin/docker-compose
-    fi
-    echo -e "${GREEN}✅ docker-compose installed${NC}"
+# Check docker compose
+if ! docker compose version &> /dev/null 2>&1; then
+    echo -e "${YELLOW}⚠️  docker compose plugin not found${NC}"
+    echo "Docker Compose should be included with Docker. Please reinstall Docker."
+    exit 1
 else
-    echo -e "${GREEN}✅ docker-compose is installed${NC}"
+    echo -e "${GREEN}✅ docker compose is installed${NC}"
 fi
 
 echo ""
