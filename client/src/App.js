@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import Sidebar from './components/Sidebar';
@@ -21,6 +21,15 @@ function PrivateRoute({ children }) {
 
 function AppRoutes() {
   const { user } = useAuth();
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+  const toggleMobileMenu = () => {
+    setMobileMenuOpen(!mobileMenuOpen);
+  };
+
+  const closeMobileMenu = () => {
+    setMobileMenuOpen(false);
+  };
 
   return (
     <Router>
@@ -31,8 +40,15 @@ function AppRoutes() {
           element={
             <PrivateRoute>
               <div className="app">
-                <Sidebar />
+                <Sidebar isOpen={mobileMenuOpen} onClose={closeMobileMenu} />
                 <div className="main-content">
+                  {/* Mobile header with menu toggle */}
+                  <div className="mobile-header">
+                    <h1 style={{ fontSize: '18px', fontWeight: 'bold' }}>LensyCam</h1>
+                    <button className="menu-toggle" onClick={toggleMobileMenu}>
+                      ☰
+                    </button>
+                  </div>
                   <Routes>
                     <Route path="/" element={<Dashboard />} />
                     <Route path="/cameras" element={<Cameras />} />

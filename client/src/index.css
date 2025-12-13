@@ -34,6 +34,24 @@ code {
   overflow-y: auto;
 }
 
+/* Mobile header - hidden on desktop */
+.mobile-header {
+  display: none;
+}
+
+.menu-toggle {
+  background: none;
+  border: none;
+  color: white;
+  font-size: 24px;
+  cursor: pointer;
+  padding: 5px;
+}
+
+.mobile-overlay {
+  display: none;
+}
+
 .sidebar-header {
   margin-bottom: 30px;
   padding-bottom: 20px;
@@ -526,34 +544,225 @@ tbody tr:hover {
 
 /* Responsive */
 @media (max-width: 768px) {
+  /* Show mobile overlay when menu is open */
+  .mobile-overlay {
+    display: block !important;
+  }
+
+  /* Hide sidebar on mobile */
   .sidebar {
-    width: 70px;
+    position: fixed;
+    left: -250px;
+    width: 250px;
+    transition: left 0.3s;
+    z-index: 1001;
   }
 
-  .sidebar-header h1,
-  .sidebar-header p,
-  .nav-link span:last-child,
-  .logout-btn span {
-    display: none;
+  .sidebar.mobile-open {
+    left: 0;
   }
 
+  /* Remove sidebar margin from main content */
   .main-content {
-    margin-left: 70px;
+    margin-left: 0;
+    padding: 0;
   }
 
+  /* Show mobile header */
+  .mobile-header {
+    display: flex !important;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+
+  /* Add padding back to content after mobile header */
+  .main-content > *:not(.mobile-header) {
+    padding: 15px;
+  }
+
+  .main-content > .page-header {
+    padding: 15px;
+    margin: 0 0 15px 0;
+  }
+
+  .main-content > .card,
+  .main-content > .stats-grid {
+    margin: 0 15px 15px 15px;
+  }
+
+  /* Page header adjustments */
+  .page-header h2 {
+    font-size: 22px;
+  }
+
+  .page-header p {
+    font-size: 13px;
+  }
+
+  /* Stats grid */
   .stats-grid {
     grid-template-columns: 1fr;
+    gap: 15px;
   }
 
+  .stat-card {
+    padding: 15px;
+  }
+
+  .stat-card .stat-value {
+    font-size: 24px;
+  }
+
+  /* Form adjustments */
   .form-row {
     grid-template-columns: 1fr;
   }
 
+  .form-group label {
+    font-size: 13px;
+  }
+
+  .form-group input,
+  .form-group select,
+  .form-group textarea {
+    font-size: 16px; /* Prevent zoom on iOS */
+  }
+
+  /* Card adjustments */
+  .card {
+    padding: 15px;
+    margin-bottom: 15px;
+  }
+
+  .card-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  .card-header .btn {
+    width: 100%;
+  }
+
+  /* Table improvements */
   .table-container {
     font-size: 12px;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  table {
+    min-width: 600px;
   }
 
   th, td {
-    padding: 8px;
+    padding: 8px 6px;
+    white-space: nowrap;
+  }
+
+  /* Actions column */
+  .actions {
+    flex-direction: column;
+    gap: 5px;
+  }
+
+  .actions .btn {
+    width: 100%;
+    font-size: 11px;
+  }
+
+  /* Modal adjustments */
+  .modal {
+    width: 95%;
+    padding: 20px;
+    margin: 10px;
+  }
+
+  .modal-header h3 {
+    font-size: 18px;
+  }
+
+  .modal-footer {
+    flex-direction: column-reverse;
+  }
+
+  .modal-footer .btn {
+    width: 100%;
+  }
+
+  /* Login page */
+  .login-box {
+    padding: 30px 20px;
+    margin: 15px;
+  }
+
+  .login-box h1 {
+    font-size: 24px;
+  }
+
+  /* Filters */
+  .filters {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .filter-group {
+    min-width: 100%;
+  }
+
+  /* Search bar */
+  .search-bar input {
+    max-width: 100%;
+  }
+
+  /* Buttons */
+  .btn {
+    font-size: 14px;
+    padding: 12px 20px;
+  }
+
+  /* Badge adjustments */
+  .badge {
+    font-size: 11px;
+    padding: 3px 8px;
+  }
+}
+
+/* Extra small devices */
+@media (max-width: 480px) {
+  .main-content {
+    padding: 10px;
+  }
+
+  .stat-card .stat-value {
+    font-size: 20px;
+  }
+
+  .stat-card h4 {
+    font-size: 12px;
+  }
+
+  table {
+    font-size: 11px;
+  }
+
+  th, td {
+    padding: 6px 4px;
+  }
+
+  .modal {
+    padding: 15px;
+  }
+}
+
+/* Landscape mobile */
+@media (max-width: 768px) and (orientation: landscape) {
+  .modal {
+    max-height: 80vh;
   }
 }
