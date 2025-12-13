@@ -145,8 +145,8 @@ if docker compose ps | grep -q "Up"; then
     echo "   View logs:    docker compose logs -f"
     echo "   Stop app:     docker compose down"
     echo "   Restart app:  docker compose restart"
-    echo "   Backup DB:    ./backup.sh"
-    echo "   Restore DB:   ./restore.sh backups/your-backup.db"
+    echo "   Backup DB:    ./scripts/backup.sh"
+    echo "   Restore DB:   ./scripts/restore.sh backups/your-backup.db"
     echo ""
     
     # Try to open browser

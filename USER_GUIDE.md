@@ -74,7 +74,9 @@ cd /home/haokha/workspace/lensy-cam
 
 2. **Run the setup script (Linux/macOS):**
 ```bash
-./setup.sh
+./scripts/setup-linux.sh  # For Linux
+# or
+./scripts/setup-mac.sh    # For macOS
 ```
 
 Or manually:

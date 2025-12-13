@@ -82,7 +82,6 @@ function Cameras() {
 
       <div className="card">
         <div className="card-header">
-          <h3>Filters</h3>
           <button onClick={() => openModal()} className="btn btn-primary">
             + Add Camera
           </button>
