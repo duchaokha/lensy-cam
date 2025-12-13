@@ -7,6 +7,7 @@ import Dashboard from './pages/Dashboard';
 import Cameras from './pages/Cameras';
 import Customers from './pages/Customers';
 import Rentals from './pages/Rentals';
+import Availability from './pages/Availability';
 import './index.css';
 
 function PrivateRoute({ children }) {
@@ -54,6 +55,7 @@ function AppRoutes() {
                     <Route path="/cameras" element={<Cameras />} />
                     <Route path="/customers" element={<Customers />} />
                     <Route path="/rentals" element={<Rentals />} />
+                    <Route path="/availability" element={<Availability />} />
                   </Routes>
                 </div>
               </div>

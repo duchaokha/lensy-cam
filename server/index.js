@@ -8,6 +8,7 @@ const cameraRoutes = require('./routes/cameras');
 const customerRoutes = require('./routes/customers');
 const rentalRoutes = require('./routes/rentals');
 const dashboardRoutes = require('./routes/dashboard');
+const availabilityRoutes = require('./routes/availability');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -23,6 +24,7 @@ app.use('/api/cameras', cameraRoutes);
 app.use('/api/customers', customerRoutes);
 app.use('/api/rentals', rentalRoutes);
 app.use('/api/dashboard', dashboardRoutes);
+app.use('/api/availability', availabilityRoutes);
 
 // Serve static files in production
 if (process.env.NODE_ENV === 'production') {

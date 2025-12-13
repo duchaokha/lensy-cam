@@ -12,6 +12,8 @@ function Rentals() {
   const [editingRental, setEditingRental] = useState(null);
   const [rentalType, setRentalType] = useState('daily');
   const [selectedCamera, setSelectedCamera] = useState(null);
+  const [startDate, setStartDate] = useState(new Date().toISOString().split('T')[0]);
+  const [startTime, setStartTime] = useState('09:00');
 
   const formatCurrency = (amount) => `${Number(amount).toLocaleString('vi-VN')} ₫`;
   const formatDate = (dateStr) => {
@@ -325,6 +327,7 @@ function Rentals() {
                         type="date"
                         name="start_date"
                         defaultValue={editingRental?.start_date || new Date().toISOString().split('T')[0]}
+                        onChange={(e) => setStartDate(e.target.value)}
                         required
                       />
                     </div>
@@ -335,8 +338,10 @@ function Rentals() {
                         type="date"
                         name="end_date"
                         defaultValue={editingRental?.end_date}
+                        min={startDate}
                         required
                       />
+                      <small>Must be after or equal to start date</small>
                     </div>
                   </div>
 
@@ -400,6 +405,7 @@ function Rentals() {
                         type="time"
                         name="start_time"
                         defaultValue={editingRental?.start_time || '09:00'}
+                        onChange={(e) => setStartTime(e.target.value)}
                         step="60"
                         required
                       />
@@ -411,9 +417,11 @@ function Rentals() {
                         type="time"
                         name="end_time"
                         defaultValue={editingRental?.end_time || '17:00'}
+                        min={startTime}
                         step="60"
                         required
                       />
+                      <small>Must be after start time</small>
                     </div>
                   </div>
 

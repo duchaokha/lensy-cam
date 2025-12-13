@@ -22,18 +22,23 @@ class API {
       ...options.headers,
     };
 
-    const response = await fetch(`${API_URL}${endpoint}`, {
-      ...options,
-      headers,
-    });
+    try {
+      const response = await fetch(`${API_URL}${endpoint}`, {
+        ...options,
+        headers,
+      });
 
-    const data = await response.json();
+      const data = await response.json();
 
-    if (!response.ok) {
-      throw new Error(data.error || 'Something went wrong');
+      if (!response.ok) {
+        throw new Error(data.error || 'Something went wrong');
+      }
+
+      return data;
+    } catch (error) {
+      console.error('API request error:', error);
+      throw error;
     }
-
-    return data;
   }
 
   // Auth
@@ -153,6 +158,14 @@ class API {
   // Dashboard
   async getDashboardStats() {
     return this.request('/dashboard/stats');
+  }
+
+  // Availability
+  async checkAvailability(params) {
+    const queryString = new URLSearchParams(params).toString();
+    return this.request(`/availability?${queryString}`, {
+      method: 'GET',
+    });
   }
 }
 

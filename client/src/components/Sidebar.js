@@ -59,6 +59,12 @@ function Sidebar({ isOpen, onClose }) {
               </NavLink>
             </li>
             <li className="nav-item">
+              <NavLink to="/availability" className="nav-link" onClick={handleNavClick}>
+                <span>📅</span>
+                <span>Availability</span>
+              </NavLink>
+            </li>
+            <li className="nav-item">
               <NavLink to="/customers" className="nav-link" onClick={handleNavClick}>
                 <span>👥</span>
                 <span>Customers</span>
