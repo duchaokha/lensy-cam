@@ -22,9 +22,9 @@ if [ -f "database/rental.db" ]; then
     SIZE=$(du -h "${BACKUP_FILE}" | cut -f1)
     echo "   Size: ${SIZE}"
     
-    # Keep only last 30 backups
+    # Keep only last 3 backups
     echo "🧹 Cleaning old backups..."
-    ls -t backups/rental-*.db 2>/dev/null | tail -n +31 | xargs rm -f 2>/dev/null
+    ls -t backups/rental-*.db 2>/dev/null | tail -n +4 | xargs rm -f 2>/dev/null
     
     # Count remaining backups
     COUNT=$(ls -1 backups/rental-*.db 2>/dev/null | wc -l)

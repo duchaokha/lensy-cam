@@ -107,6 +107,22 @@ echo -e "${YELLOW}📁 Creating directories...${NC}"
 mkdir -p database backups
 echo -e "${GREEN}✅ Directories created${NC}"
 
+# Setup automatic backup cronjob (every 3 hours)
+echo -e "${YELLOW}⏰ Setting up automatic backups...${NC}"
+BACKUP_SCRIPT="$(pwd)/scripts/backup.sh"
+CRON_CMD="0 */3 * * * cd $(pwd) && $BACKUP_SCRIPT >> logs/backup.log 2>&1"
+
+# Check if cronjob already exists
+if crontab -l 2>/dev/null | grep -q "$BACKUP_SCRIPT"; then
+    echo -e "${GREEN}✅ Backup cronjob already exists${NC}"
+else
+    # Add cronjob
+    (crontab -l 2>/dev/null; echo "$CRON_CMD") | crontab -
+    echo -e "${GREEN}✅ Backup cronjob added (runs every 3 hours)${NC}"
+fi
+
+mkdir -p logs
+
 echo ""
 echo "📋 Step 3: Starting application with Docker..."
 echo ""
@@ -145,8 +161,11 @@ if docker compose ps | grep -q "Up"; then
     echo "   View logs:    docker compose logs -f"
     echo "   Stop app:     docker compose down"
     echo "   Restart app:  docker compose restart"
-    echo "   Backup DB:    ./scripts/backup.sh"
+    echo "   Manual backup: ./scripts/backup.sh"
     echo "   Restore DB:   ./scripts/restore.sh backups/your-backup.db"
+    echo "   View backups: crontab -l | grep backup"
+    echo ""
+    echo "💡 Automatic backups run every 3 hours (check logs/backup.log)"
     echo ""
     
     # Try to open browser
