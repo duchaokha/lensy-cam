@@ -37,21 +37,6 @@ else
     echo -e "${GREEN}✅ Homebrew is installed${NC}"
 fi
 
-# Check if Node.js is installed
-if ! command -v node &> /dev/null; then
-    echo -e "${YELLOW}⚠️  Node.js not found. Installing Node.js...${NC}"
-    brew install node@18
-    brew link node@18
-else
-    NODE_VERSION=$(node -v | cut -d'v' -f2 | cut -d'.' -f1)
-    if [ "$NODE_VERSION" -lt 16 ]; then
-        echo -e "${YELLOW}⚠️  Node.js version is too old. Updating...${NC}"
-        brew upgrade node
-    else
-        echo -e "${GREEN}✅ Node.js $(node -v) is installed${NC}"
-    fi
-fi
-
 # Check if Docker is installed
 if ! command -v docker &> /dev/null; then
     echo -e "${YELLOW}⚠️  Docker not found.${NC}"
@@ -108,91 +93,32 @@ mkdir -p database backups
 echo -e "${GREEN}✅ Directories created${NC}"
 
 echo ""
-echo "📋 Step 3: Choose installation method..."
-echo ""
-echo "1) Docker (Recommended - Everything in one container)"
-echo "2) Local Development (Node.js on your Mac)"
-echo ""
-read -p "Select option (1 or 2): " -n 1 -r
+echo "📋 Step 3: Starting application with Docker..."
 echo ""
 
-if [[ $REPLY == "1" ]]; then
-    # Docker installation
-    echo ""
-    echo "🐳 Installing with Docker..."
-    echo ""
-    
-    # Stop any existing containers
-    docker-compose down 2>/dev/null || true
-    
-    # Build and start
-    echo "🔨 Building Docker image (this may take a few minutes)..."
-    docker-compose build
-    
-    echo "🚀 Starting application..."
-    docker-compose up -d
-    
-    # Wait for container to be healthy
-    echo "⏳ Waiting for application to be ready..."
-    sleep 5
-    
-    # Check if container is running
-    if docker-compose ps | grep -q "Up"; then
-        echo ""
-        echo -e "${GREEN}════════════════════════════════════════${NC}"
-        echo -e "${GREEN}✅ Installation Complete!${NC}"
-        echo -e "${GREEN}════════════════════════════════════════${NC}"
-        echo ""
-        echo "🌐 Your application is running at:"
-        echo -e "   ${GREEN}http://localhost:5000${NC}"
-        echo ""
-        echo "🔑 Default Login:"
-        echo "   Username: admin"
-        echo "   Password: admin123"
-        echo ""
-        echo "⚠️  IMPORTANT: Change the default password after first login!"
-        echo ""
-        echo "📝 Useful commands:"
-        echo "   View logs:    docker-compose logs -f"
-        echo "   Stop app:     docker-compose down"
-        echo "   Restart app:  docker-compose restart"
-        echo "   Backup DB:    ./backup.sh"
-        echo ""
-        
-        # Open browser
-        sleep 2
-        open http://localhost:5000
-    else
-        echo -e "${RED}❌ Failed to start application${NC}"
-        echo "Check logs with: docker-compose logs"
-        exit 1
-    fi
-    
-elif [[ $REPLY == "2" ]]; then
-    # Local installation
-    echo ""
-    echo "💻 Installing for local development..."
-    echo ""
-    
-    # Install backend dependencies
-    echo "📦 Installing backend dependencies..."
-    npm install
-    
-    # Install frontend dependencies
-    echo "📦 Installing frontend dependencies..."
-    cd client
-    npm install
-    cd ..
-    
+# Stop any existing containers
+docker-compose down 2>/dev/null || true
+
+# Build and start
+echo "🔨 Building Docker image (this may take a few minutes)..."
+docker-compose build
+
+echo "🚀 Starting application..."
+docker-compose up -d
+
+# Wait for container to be healthy
+echo "⏳ Waiting for application to be ready..."
+sleep 5
+
+# Check if container is running
+if docker-compose ps | grep -q "Up"; then
     echo ""
     echo -e "${GREEN}════════════════════════════════════════${NC}"
     echo -e "${GREEN}✅ Installation Complete!${NC}"
     echo -e "${GREEN}════════════════════════════════════════${NC}"
     echo ""
-    echo "🚀 Starting development servers..."
-    echo ""
-    echo "   Backend:  http://localhost:5000"
-    echo "   Frontend: http://localhost:3000"
+    echo "🌐 Your application is running at:"
+    echo -e "   ${GREEN}http://localhost:5000${NC}"
     echo ""
     echo "🔑 Default Login:"
     echo "   Username: admin"
@@ -201,23 +127,18 @@ elif [[ $REPLY == "2" ]]; then
     echo "⚠️  IMPORTANT: Change the default password after first login!"
     echo ""
     echo "📝 Useful commands:"
-    echo "   Start app:    npm run dev"
-    echo "   Backend only: npm run server"
-    echo "   Frontend only: npm run client"
+    echo "   View logs:    docker-compose logs -f"
+    echo "   Stop app:     docker-compose down"
+    echo "   Restart app:  docker-compose restart"
     echo "   Backup DB:    ./backup.sh"
+    echo "   Restore DB:   ./restore.sh backups/your-backup.db"
     echo ""
     
-    # Start the application
-    npm run dev &
-    
-    # Wait and open browser
-    sleep 3
-    open http://localhost:3000
-    
-    echo ""
-    echo "Press Ctrl+C to stop the servers"
-    wait
+    # Open browser
+    sleep 2
+    open http://localhost:5000
 else
-    echo -e "${RED}Invalid option${NC}"
+    echo -e "${RED}❌ Failed to start application${NC}"
+    echo "Check logs with: docker-compose logs"
     exit 1
 fi
