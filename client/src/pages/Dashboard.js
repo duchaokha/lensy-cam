@@ -21,7 +21,7 @@ function Dashboard() {
     }
   };
 
-  if (loading) return <div className="loading">Loading dashboard</div>;
+  if (loading) return <div className="loading">Đang tải dữ liệu...</div>;
   if (error) return <div className="alert alert-error">{error}</div>;
   if (!stats) return null;
 
@@ -35,74 +35,74 @@ function Dashboard() {
   return (
     <div>
       <div className="page-header">
-        <h2>Dashboard</h2>
-        <p>Overview of your camera rental business</p>
+        <h2>Tổng quan</h2>
+        <p>Tổng quan kinh doanh cho thuê máy ảnh</p>
       </div>
 
       <div className="stats-grid">
         <div className="stat-card primary">
-          <h4>Total Revenue</h4>
+          <h4>Tổng doanh thu</h4>
           <div className="stat-value">{formatCurrency(stats.revenue.total)}</div>
-          <div className="stat-label">All time</div>
+          <div className="stat-label">Tất cả thời gian</div>
         </div>
 
         <div className="stat-card">
-          <h4>This Month</h4>
+          <h4>Tháng này</h4>
           <div className="stat-value">{formatCurrency(stats.revenue.monthly)}</div>
-          <div className="stat-label">Monthly revenue</div>
+          <div className="stat-label">Doanh thu tháng</div>
         </div>
 
         <div className="stat-card">
-          <h4>This Year</h4>
+          <h4>Năm nay</h4>
           <div className="stat-value">{formatCurrency(stats.revenue.yearly)}</div>
-          <div className="stat-label">Yearly revenue</div>
+          <div className="stat-label">Doanh thu năm</div>
         </div>
 
         <div className="stat-card">
-          <h4>Total Cameras</h4>
+          <h4>Tổng số máy</h4>
           <div className="stat-value">{stats.cameras.total}</div>
-          <div className="stat-label">In inventory</div>
+          <div className="stat-label">Trong kho</div>
         </div>
 
         <div className="stat-card">
-          <h4>Available</h4>
+          <h4>Sẵn sàng</h4>
           <div className="stat-value">{stats.cameras.available}</div>
-          <div className="stat-label">Ready to rent</div>
+          <div className="stat-label">Có thể cho thuê</div>
         </div>
 
         <div className="stat-card">
-          <h4>Currently Rented</h4>
+          <h4>Đang cho thuê</h4>
           <div className="stat-value">{stats.cameras.rented}</div>
-          <div className="stat-label">Out on rental</div>
+          <div className="stat-label">Đang sử dụng</div>
         </div>
 
         <div className="stat-card">
-          <h4>Active Rentals</h4>
+          <h4>Đơn đang hoạt động</h4>
           <div className="stat-value">{stats.rentals.active}</div>
-          <div className="stat-label">Ongoing</div>
+          <div className="stat-label">Đang tiến hành</div>
         </div>
 
         <div className="stat-card">
-          <h4>Overdue Rentals</h4>
+          <h4>Đơn quá hạn</h4>
           <div className="stat-value" style={{ color: stats.rentals.overdue > 0 ? '#dc3545' : '#28a745' }}>
             {stats.rentals.overdue}
           </div>
-          <div className="stat-label">Need attention</div>
+          <div className="stat-label">Cần chú ý</div>
         </div>
       </div>
 
       {stats.monthlyData && stats.monthlyData.length > 0 && (
         <div className="card">
           <div className="card-header">
-            <h3>Monthly Revenue Trend (Last 6 Months)</h3>
+            <h3>Xu hướng doanh thu (6 tháng gần đây)</h3>
           </div>
           <div className="table-container">
             <table>
               <thead>
                 <tr>
-                  <th>Month</th>
-                  <th>Rentals</th>
-                  <th>Revenue</th>
+                  <th>Tháng</th>
+                  <th>Đơn thuê</th>
+                  <th>Doanh thu</th>
                 </tr>
               </thead>
               <tbody>
@@ -122,18 +122,18 @@ function Dashboard() {
       {stats.recentRentals && stats.recentRentals.length > 0 && (
         <div className="card">
           <div className="card-header">
-            <h3>Active Rentals</h3>
+            <h3>Đơn đang hoạt động</h3>
           </div>
           <div className="table-container">
             <table>
               <thead>
                 <tr>
-                  <th>Camera</th>
-                  <th>Customer</th>
-                  <th>Start Date</th>
-                  <th>End Date</th>
-                  <th>Amount</th>
-                  <th>Status</th>
+                  <th>Máy ảnh</th>
+                  <th>Khách hàng</th>
+                  <th>Ngày bắt đầu</th>
+                  <th>Ngày kết thúc</th>
+                  <th>Số tiền</th>
+                  <th>Trạng thái</th>
                 </tr>
               </thead>
               <tbody>
@@ -156,7 +156,7 @@ function Dashboard() {
                       <td>{formatCurrency(rental.total_amount)}</td>
                       <td>
                         <span className={`badge ${isOverdue ? 'badge-danger' : 'badge-success'}`}>
-                          {isOverdue ? 'Overdue' : 'Active'}
+                          {isOverdue ? 'Quá hạn' : 'Đang hoạt động'}
                         </span>
                       </td>
                     </tr>
@@ -170,8 +170,8 @@ function Dashboard() {
 
       {(!stats.recentRentals || stats.recentRentals.length === 0) && (
         <div className="empty-state">
-          <h3>No active rentals</h3>
-          <p>Start creating rentals to see them here</p>
+          <h3>Không có đơn thuê nào</h3>
+          <p>Bắt đầu tạo đơn thuê để xem tại đây</p>
         </div>
       )}
     </div>

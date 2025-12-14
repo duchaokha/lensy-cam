@@ -38,7 +38,7 @@ function Sidebar({ isOpen, onClose }) {
             <img src="/logo.png" alt="Logo" style={{ width: '40px', height: '40px', objectFit: 'contain' }} />
             <h1 style={{ margin: 0 }}>LensyCam</h1>
           </div>
-          <p>Welcome, {user?.username}</p>
+          <p>Xin chào, {user?.username}</p>
         </div>
 
         <nav>
@@ -46,38 +46,38 @@ function Sidebar({ isOpen, onClose }) {
             <li className="nav-item">
               <NavLink to="/" className="nav-link" end onClick={handleNavClick}>
                 <span>📊</span>
-                <span>Dashboard</span>
+                <span>Tổng quan</span>
               </NavLink>
             </li>
             <li className="nav-item">
               <NavLink to="/cameras" className="nav-link" onClick={handleNavClick}>
                 <span>📷</span>
-                <span>Cameras</span>
+                <span>Máy ảnh</span>
               </NavLink>
             </li>
             <li className="nav-item">
               <NavLink to="/rentals" className="nav-link" onClick={handleNavClick}>
                 <span>📋</span>
-                <span>Rentals</span>
+                <span>Cho thuê</span>
               </NavLink>
             </li>
             <li className="nav-item">
               <NavLink to="/availability" className="nav-link" onClick={handleNavClick}>
                 <span>📅</span>
-                <span>Availability</span>
+                <span>Kiểm tra</span>
               </NavLink>
             </li>
             <li className="nav-item">
               <NavLink to="/customers" className="nav-link" onClick={handleNavClick}>
                 <span>👥</span>
-                <span>Customers</span>
+                <span>Khách hàng</span>
               </NavLink>
             </li>
           </ul>
         </nav>
 
         <button onClick={logout} className="logout-btn">
-          <span>🚪</span> <span>Logout</span>
+          <span>🚪</span> <span>Đăng xuất</span>
         </button>
       </div>
     </>

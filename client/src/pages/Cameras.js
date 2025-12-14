@@ -54,7 +54,7 @@ function Cameras() {
   };
 
   const handleDelete = async (id) => {
-    if (!window.confirm('Are you sure you want to delete this camera?')) return;
+    if (!window.confirm('Bạn có chắc chắn muốn xóa máy ảnh này?')) return;
 
     try {
       await api.deleteCamera(id);
@@ -69,13 +69,13 @@ function Cameras() {
     setShowModal(true);
   };
 
-  if (loading) return <div className="loading">Loading cameras</div>;
+  if (loading) return <div className="loading">Đang tải máy ảnh</div>;
 
   return (
     <div>
       <div className="page-header">
-        <h2>Camera Inventory</h2>
-        <p>Manage your camera equipment</p>
+        <h2>Kho Máy Ảnh</h2>
+        <p>Quản lý thiết bị máy ảnh của bạn</p>
       </div>
 
       {error && <div className="alert alert-error">{error}</div>}
@@ -83,7 +83,7 @@ function Cameras() {
       <div className="card">
         <div className="card-header">
           <button onClick={() => openModal()} className="btn btn-primary">
-            + Add Camera
+            + Thêm Máy Ảnh
           </button>
         </div>
 
@@ -91,7 +91,7 @@ function Cameras() {
           <div className="filter-group">
             <input
               type="text"
-              placeholder="Search cameras..."
+              placeholder="Tìm kiếm máy ảnh..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
             />
@@ -99,16 +99,16 @@ function Cameras() {
 
           <div className="filter-group">
             <select value={statusFilter} onChange={(e) => setStatusFilter(e.target.value)}>
-              <option value="">All Status</option>
-              <option value="available">Available</option>
-              <option value="rented">Rented</option>
-              <option value="maintenance">Maintenance</option>
+              <option value="">Tất cả Trạng thái</option>
+              <option value="available">Sẵn sàng</option>
+              <option value="rented">Đang cho thuê</option>
+              <option value="maintenance">Bảo trì</option>
             </select>
           </div>
 
           <div className="filter-group">
             <select value={categoryFilter} onChange={(e) => setCategoryFilter(e.target.value)}>
-              <option value="">All Categories</option>
+              <option value="">Tất cả Loại</option>
               {categories.map(cat => (
                 <option key={cat} value={cat}>{cat}</option>
               ))}
@@ -122,15 +122,15 @@ function Cameras() {
           <table>
             <thead>
               <tr>
-                <th>Name</th>
-                <th>Brand/Model</th>
-                <th>Category</th>
-                <th>Serial #</th>
-                <th>Daily Rate</th>
-                <th>Hourly Rate</th>
-                <th>Status</th>
-                <th>Condition</th>
-                <th>Actions</th>
+                <th>Tên</th>
+                <th>Hãng/Dòng máy</th>
+                <th>Loại</th>
+                <th>Số serial</th>
+                <th>Giá theo ngày</th>
+                <th>Giá theo giờ</th>
+                <th>Trạng thái</th>
+                <th>Tình trạng</th>
+                <th>Hành động</th>
               </tr>
             </thead>
             <tbody>
@@ -157,13 +157,13 @@ function Cameras() {
                         onClick={() => openModal(camera)}
                         className="btn btn-secondary btn-small"
                       >
-                        Edit
+                        Sửa
                       </button>
                       <button
                         onClick={() => handleDelete(camera.id)}
                         className="btn btn-danger btn-small"
                       >
-                        Delete
+                        Xóa
                       </button>
                     </div>
                   </td>
@@ -175,8 +175,8 @@ function Cameras() {
 
         {cameras.length === 0 && (
           <div className="empty-state">
-            <h3>No cameras found</h3>
-            <p>Add your first camera to get started</p>
+            <h3>Không tìm thấy máy ảnh</h3>
+            <p>Thêm máy ảnh đầu tiên để bắt đầu</p>
           </div>
         )}
       </div>
@@ -185,48 +185,48 @@ function Cameras() {
         <div className="modal-overlay" onClick={() => setShowModal(false)}>
           <div className="modal" onClick={(e) => e.stopPropagation()}>
             <div className="modal-header">
-              <h3>{editingCamera ? 'Edit Camera' : 'Add Camera'}</h3>
+              <h3>{editingCamera ? 'Sửa Máy Ảnh' : 'Thêm Máy Ảnh'}</h3>
               <button onClick={() => setShowModal(false)} className="close-btn">&times;</button>
             </div>
 
             <form onSubmit={handleSubmit}>
               <div className="form-group">
-                <label>Camera Name *</label>
+                <label>Tên Máy Ảnh *</label>
                 <input
                   name="name"
                   defaultValue={editingCamera?.name}
                   required
-                  placeholder="e.g., Canon EOS R5"
+                  placeholder="vd: Canon EOS R5"
                 />
               </div>
 
               <div className="form-row">
                 <div className="form-group">
-                  <label>Brand *</label>
+                  <label>Hãng *</label>
                   <input
                     name="brand"
                     defaultValue={editingCamera?.brand}
                     required
-                    placeholder="e.g., Canon"
+                    placeholder="vd: Canon"
                   />
                 </div>
 
                 <div className="form-group">
-                  <label>Model *</label>
+                  <label>Dòng máy *</label>
                   <input
                     name="model"
                     defaultValue={editingCamera?.model}
                     required
-                    placeholder="e.g., EOS R5"
+                    placeholder="vd: EOS R5"
                   />
                 </div>
               </div>
 
               <div className="form-row">
                 <div className="form-group">
-                  <label>Category *</label>
+                  <label>Loại *</label>
                   <select name="category" defaultValue={editingCamera?.category} required>
-                    <option value="">Select category</option>
+                    <option value="">Chọn loại</option>
                     {categories.map(cat => (
                       <option key={cat} value={cat}>{cat}</option>
                     ))}
@@ -234,18 +234,18 @@ function Cameras() {
                 </div>
 
                 <div className="form-group">
-                  <label>Serial Number</label>
+                  <label>Số serial</label>
                   <input
                     name="serial_number"
                     defaultValue={editingCamera?.serial_number}
-                    placeholder="Optional"
+                    placeholder="Tùy chọn"
                   />
                 </div>
               </div>
 
               <div className="form-row">
                 <div className="form-group">
-                  <label>Purchase Date</label>
+                  <label>Ngày mua</label>
                   <input
                     type="date"
                     name="purchase_date"
@@ -254,7 +254,7 @@ function Cameras() {
                 </div>
 
                 <div className="form-group">
-                  <label>Purchase Price</label>
+                  <label>Giá mua</label>
                   <input
                     type="number"
                     step="0.01"
@@ -267,7 +267,7 @@ function Cameras() {
 
               <div className="form-row">
                 <div className="form-group">
-                  <label>Daily Rental Rate *</label>
+                  <label>Giá theo ngày *</label>
                   <input
                     type="number"
                     step="0.01"
@@ -279,7 +279,7 @@ function Cameras() {
                 </div>
 
                 <div className="form-group">
-                  <label>Hourly Rental Rate</label>
+                  <label>Giá theo giờ</label>
                   <input
                     type="number"
                     step="0.01"
@@ -287,46 +287,46 @@ function Cameras() {
                     defaultValue={editingCamera?.hourly_rate}
                     placeholder="0.00"
                   />
-                  <small>For hourly rentals</small>
+                  <small>Cho thuê theo giờ</small>
                 </div>
               </div>
 
               <div className="form-group">
-                <label>Condition *</label>
+                <label>Tình trạng *</label>
                 <select name="condition" defaultValue={editingCamera?.condition || 'excellent'} required>
-                  <option value="excellent">Excellent</option>
-                  <option value="good">Good</option>
-                  <option value="fair">Fair</option>
-                  <option value="poor">Poor</option>
+                  <option value="excellent">Xuất sắc</option>
+                  <option value="good">Tốt</option>
+                  <option value="fair">Khá</option>
+                  <option value="poor">Kém</option>
                 </select>
               </div>
 
               {editingCamera && (
                 <div className="form-group">
-                  <label>Status</label>
+                  <label>Trạng thái</label>
                   <select name="status" defaultValue={editingCamera?.status}>
-                    <option value="available">Available</option>
-                    <option value="rented">Rented</option>
-                    <option value="maintenance">Maintenance</option>
+                    <option value="available">Sẵn sàng</option>
+                    <option value="rented">Đang cho thuê</option>
+                    <option value="maintenance">Bảo trì</option>
                   </select>
                 </div>
               )}
 
               <div className="form-group">
-                <label>Description</label>
+                <label>Mô tả</label>
                 <textarea
                   name="description"
                   defaultValue={editingCamera?.description}
-                  placeholder="Additional details about the camera..."
+                  placeholder="Thông tin chi tiết về máy ảnh..."
                 />
               </div>
 
               <div className="modal-footer">
                 <button type="button" onClick={() => setShowModal(false)} className="btn btn-secondary">
-                  Cancel
+                  Hủy
                 </button>
                 <button type="submit" className="btn btn-primary">
-                  {editingCamera ? 'Update' : 'Create'}
+                  {editingCamera ? 'Cập nhật' : 'Tạo mới'}
                 </button>
               </div>
             </form>

@@ -189,13 +189,13 @@ function Rentals() {
     return endDate < now;
   };
 
-  if (loading) return <div className="loading">Loading rentals</div>;
+  if (loading) return <div className="loading">Đang tải đơn thuê</div>;
 
   return (
     <div>
       <div className="page-header">
-        <h2>Rentals</h2>
-        <p>Manage camera rentals</p>
+        <h2>Đơn Cho Thuê</h2>
+        <p>Quản lý đơn thuê máy ảnh</p>
       </div>
 
       {error && <div className="alert alert-error">{error}</div>}
@@ -204,14 +204,14 @@ function Rentals() {
         <div className="card-header">
           <div className="filters">
             <select value={statusFilter} onChange={(e) => setStatusFilter(e.target.value)}>
-              <option value="">All Rentals</option>
-              <option value="active">Active</option>
-              <option value="completed">Completed</option>
-              <option value="cancelled">Cancelled</option>
+              <option value="">Tất cả Đơn thuê</option>
+              <option value="active">Đang hoạt động</option>
+              <option value="completed">Hoàn thành</option>
+              <option value="cancelled">Đã hủy</option>
             </select>
           </div>
           <button onClick={() => openModal()} className="btn btn-primary">
-            + New Rental
+            + Thêm Đơn Thuê
           </button>
         </div>
 
@@ -220,15 +220,15 @@ function Rentals() {
             <thead>
               <tr>
                 <th>ID</th>
-                <th>Camera</th>
-                <th>Customer</th>
-                <th>Start</th>
-                <th>End</th>
-                <th>Duration</th>
-                <th>Amount</th>
-                <th>Deposit</th>
-                <th>Status</th>
-                <th>Actions</th>
+                <th>Máy ảnh</th>
+                <th>Khách hàng</th>
+                <th>Bắt đầu</th>
+                <th>Kết thúc</th>
+                <th>Thời gian</th>
+                <th>Số tiền</th>
+                <th>Tiền cọc</th>
+                <th>Trạng thái</th>
+                <th>Hành động</th>
               </tr>
             </thead>
             <tbody>
@@ -255,9 +255,9 @@ function Rentals() {
                   </td>
                   <td>
                     {rental.rental_type === 'hourly' ? (
-                      <span>{Math.ceil(((new Date(`2000-01-01 ${rental.end_time}`) - new Date(`2000-01-01 ${rental.start_time}`)) / (1000 * 60 * 60)))} hrs</span>
+                      <span>{Math.ceil(((new Date(`2000-01-01 ${rental.end_time}`) - new Date(`2000-01-01 ${rental.start_time}`)) / (1000 * 60 * 60)))} giờ</span>
                     ) : (
-                      <span>{calculateDays(rental.start_date, rental.end_date)} days</span>
+                      <span>{calculateDays(rental.start_date, rental.end_date)} ngày</span>
                     )}
                   </td>
                   <td>{formatCurrency(rental.total_amount)}</td>
@@ -268,7 +268,7 @@ function Rentals() {
                       rental.status === 'active' ? 'warning' :
                       rental.status === 'completed' ? 'success' : 'secondary'
                     }`}>
-                      {isOverdue(rental) ? 'Overdue' : rental.status}
+                      {isOverdue(rental) ? 'Quá hạn' : rental.status}
                     </span>
                   </td>
                   <td>
@@ -278,20 +278,20 @@ function Rentals() {
                           onClick={() => handleReturn(rental.id)}
                           className="btn btn-success btn-small"
                         >
-                          Complete
+                          Hoàn thành
                         </button>
                       )}
                       <button
                         onClick={() => openModal(rental)}
                         className="btn btn-secondary btn-small"
                       >
-                        Edit
+                        Sửa
                       </button>
                       <button
                         onClick={() => handleDelete(rental.id)}
                         className="btn btn-danger btn-small"
                       >
-                        Delete
+                        Xóa
                       </button>
                     </div>
                   </td>
@@ -303,8 +303,8 @@ function Rentals() {
 
         {rentals.length === 0 && (
           <div className="empty-state">
-            <h3>No rentals found</h3>
-            <p>Create your first rental to get started</p>
+            <h3>Không tìm thấy đơn thuê</h3>
+            <p>Tạo đơn thuê đầu tiên để bắt đầu</p>
           </div>
         )}
       </div>
@@ -313,29 +313,29 @@ function Rentals() {
         <div className="modal-overlay" onClick={() => setShowModal(false)}>
           <div className="modal" onClick={(e) => e.stopPropagation()}>
             <div className="modal-header">
-              <h3>{editingRental ? 'Edit Rental' : 'New Rental'}</h3>
+              <h3>{editingRental ? 'Sửa Đơn Thuê' : 'Thêm Đơn Thuê'}</h3>
               <button onClick={() => setShowModal(false)} className="close-btn">&times;</button>
             </div>
 
             <form key={editingRental?.id || 'new'} onSubmit={handleSubmit}>
               <div className="form-group">
-                <label>Rental Type *</label>
+                <label>Loại thuê *</label>
                 <select 
                   value={rentalType} 
                   onChange={(e) => setRentalType(e.target.value)}
                   disabled={!!editingRental}
                   required
                 >
-                  <option value="daily">Daily Rental</option>
-                  <option value="hourly">Hourly Rental</option>
+                  <option value="daily">Thuê theo ngày</option>
+                  <option value="hourly">Thuê theo giờ</option>
                 </select>
-                {editingRental && <small>Cannot change rental type when editing</small>}
+                {editingRental && <small>Không thể thay đổi loại thuê khi sửa</small>}
               </div>
 
               {!editingRental && (
                 <>
                   <div className="form-group">
-                    <label>Camera *</label>
+                    <label>Máy ảnh *</label>
                     <select 
                       name="camera_id" 
                       required
@@ -344,21 +344,21 @@ function Rentals() {
                         setSelectedCamera(camera);
                       }}
                     >
-                      <option value="">Select a camera</option>
+                      <option value="">Chọn máy ảnh</option>
                       {cameras.map((camera) => {
                         const rate = rentalType === 'hourly' ? camera.hourly_rate : camera.daily_rate;
-                        const rateLabel = rentalType === 'hourly' ? '/hr' : '/day';
+                        const rateLabel = rentalType === 'hourly' ? '/giờ' : '/ngày';
                         return (
                           <option key={camera.id} value={camera.id}>
                             {camera.name} - {camera.brand} {camera.model} 
-                            {rate ? ` ($${rate}${rateLabel})` : ' (Rate not set)'}
-                            {camera.status === 'rented' ? ' - Currently Rented' : ''}
-                            {camera.status === 'maintenance' ? ' - In Maintenance' : ''}
+                            {rate ? ` ($${rate}${rateLabel})` : ' (Chưa đặt giá)'}
+                            {camera.status === 'rented' ? ' - Đang cho thuê' : ''}
+                            {camera.status === 'maintenance' ? ' - Đang bảo trì' : ''}
                           </option>
                         );
                       })}
                     </select>
-                    <small>You can select any camera. System will check for {rentalType === 'hourly' ? 'time' : 'date'} conflicts.</small>
+                    <small>Bạn có thể chọn bất kỳ máy ảnh nào. Hệ thống sẽ kiểm tra xung đột {rentalType === 'hourly' ? 'thời gian' : 'ngày'}.</small>
                   </div>
 
                   <div className="form-group">
@@ -369,7 +369,7 @@ function Rentals() {
                         onChange={(e) => setIsNewCustomer(e.target.checked)}
                         style={{ width: 'auto', marginRight: '8px' }}
                       />
-                      Add New Customer
+                      Thêm khách hàng mới
                     </label>
                   </div>
 
@@ -377,50 +377,50 @@ function Rentals() {
                     <>
                       <div className="form-row">
                         <div className="form-group">
-                          <label>Customer Name *</label>
+                          <label>Tên khách hàng *</label>
                           <input
                             type="text"
                             name="customer_name"
                             required
-                            placeholder="Enter customer name"
+                            placeholder="Nhập tên khách hàng"
                           />
                         </div>
 
                         <div className="form-group">
-                          <label>Phone Number</label>
+                          <label>Số điện thoại</label>
                           <input
                             type="tel"
                             name="customer_phone"
-                            placeholder="Enter phone number"
+                            placeholder="Nhập số điện thoại"
                           />
                         </div>
                       </div>
 
                       <div className="form-row">
                         <div className="form-group">
-                          <label>Email (Optional)</label>
+                          <label>Email (Tùy chọn)</label>
                           <input
                             type="email"
                             name="customer_email"
-                            placeholder="Enter email"
+                            placeholder="Nhập email"
                           />
                         </div>
 
                         <div className="form-group">
-                          <label>Address (Optional)</label>
+                          <label>Địa chỉ (Tùy chọn)</label>
                           <input
                             type="text"
                             name="customer_address"
-                            placeholder="Enter address"
+                            placeholder="Nhập địa chỉ"
                           />
                         </div>
                       </div>
                     </>
                   ) : (
                     <div className="form-group">
-                      <label>Customer *</label>
+                      <label>Khách hàng *</label>
                       <select name="customer_id" required>
-                        <option value="">Select a customer</option>
+                        <option value="">Chọn khách hàng</option>
                         {customers.map((customer) => (
                           <option key={customer.id} value={customer.id}>
                             {customer.name}{customer.phone ? ` - ${customer.phone}` : ''}
@@ -438,7 +438,7 @@ function Rentals() {
                 <>
                   <div className="form-row">
                     <div className="form-group">
-                      <label>Start Date *</label>
+                      <label>Ngày bắt đầu *</label>
                       <input
                         type="date"
                         name="start_date"
@@ -449,7 +449,7 @@ function Rentals() {
                     </div>
 
                     <div className="form-group">
-                      <label>End Date *</label>
+                      <label>Ngày kết thúc *</label>
                       <input
                         type="date"
                         name="end_date"
@@ -457,13 +457,13 @@ function Rentals() {
                         min={startDate}
                         required
                       />
-                      <small>Must be after or equal to start date</small>
+                      <small>Phải sau hoặc bằng ngày bắt đầu</small>
                     </div>
                   </div>
 
                   <div className="form-row">
                     <div className="form-group">
-                      <label>Start Time *</label>
+                      <label>Giờ bắt đầu *</label>
                       <input
                         type="time"
                         name="start_time"
@@ -472,11 +472,11 @@ function Rentals() {
                         step="60"
                         required
                       />
-                      <small>Pickup time</small>
+                      <small>Giờ nhận máy</small>
                     </div>
 
                     <div className="form-group">
-                      <label>End Time *</label>
+                      <label>Giờ kết thúc *</label>
                       <input
                         type="time"
                         name="end_time"
@@ -485,13 +485,13 @@ function Rentals() {
                         step="60"
                         required
                       />
-                      <small>Return time</small>
+                      <small>Giờ trả máy</small>
                     </div>
                   </div>
 
                   <div className="form-row">
                     <div className="form-group">
-                      <label>Daily Rate *</label>
+                      <label>Giá theo ngày *</label>
                       <input
                         type="number"
                         step="0.01"
@@ -500,25 +500,25 @@ function Rentals() {
                         required
                         placeholder="0.00"
                       />
-                      <small>Rate per day</small>
+                      <small>Giá mỗi ngày</small>
                     </div>
 
                     <div className="form-group">
-                      <label>Custom Total Amount</label>
+                      <label>Tổng tiền tùy chỉnh</label>
                       <input
                         type="number"
                         step="0.01"
                         name="custom_total_amount"
                         defaultValue={editingRental?.total_amount}
-                        placeholder="Leave blank for auto-calculation"
+                        placeholder="Để trống để tính tự động"
                       />
-                      <small>Override calculated amount</small>
+                      <small>Ghi đè số tiền tính toán</small>
                     </div>
                   </div>
 
                   <div className="form-row">
                     <div className="form-group">
-                      <label>Deposit</label>
+                      <label>Đặt cọc</label>
                       <input
                         type="number"
                         step="0.01"
@@ -526,14 +526,14 @@ function Rentals() {
                         defaultValue={editingRental?.deposit || 0}
                         placeholder="0.00"
                       />
-                      <small>Security deposit</small>
+                      <small>Tiền đặt cọc</small>
                     </div>
                   </div>
                 </>
               ) : (
                 <>
                   <div className="form-group">
-                    <label>Rental Date *</label>
+                    <label>Ngày thuê *</label>
                     <input
                       type="date"
                       name="start_date"
@@ -544,7 +544,7 @@ function Rentals() {
 
                   <div className="form-row">
                     <div className="form-group">
-                      <label>Start Time *</label>
+                      <label>Giờ bắt đầu *</label>
                       <input
                         type="time"
                         name="start_time"
@@ -556,7 +556,7 @@ function Rentals() {
                     </div>
 
                     <div className="form-group">
-                      <label>End Time *</label>
+                      <label>Giờ kết thúc *</label>
                       <input
                         type="time"
                         name="end_time"
@@ -565,13 +565,13 @@ function Rentals() {
                         step="60"
                         required
                       />
-                      <small>Must be after start time</small>
+                      <small>Phải sau giờ bắt đầu</small>
                     </div>
                   </div>
 
                   <div className="form-row">
                     <div className="form-group">
-                      <label>Hourly Rate *</label>
+                      <label>Giá theo giờ *</label>
                       <input
                         type="number"
                         step="0.01"
@@ -580,19 +580,19 @@ function Rentals() {
                         required
                         placeholder="0.00"
                       />
-                      <small>Rate per hour</small>
+                      <small>Giá mỗi giờ</small>
                     </div>
 
                     <div className="form-group">
-                      <label>Custom Total Amount</label>
+                      <label>Tổng tiền tùy chỉnh</label>
                       <input
                         type="number"
                         step="0.01"
                         name="custom_total_amount"
                         defaultValue={editingRental?.total_amount}
-                        placeholder="Leave blank for auto-calculation"
+                        placeholder="Để trống để tính tự động"
                       />
-                      <small>Override calculated amount</small>
+                      <small>Ghi đè số tiền tính toán</small>
                     </div>
                   </div>
 
@@ -627,30 +627,30 @@ function Rentals() {
 
               {editingRental && (
                 <div className="form-group">
-                  <label>Status</label>
+                  <label>Trạng thái</label>
                   <select name="status" defaultValue={editingRental?.status}>
-                    <option value="active">Active</option>
-                    <option value="completed">Completed</option>
-                    <option value="cancelled">Cancelled</option>
+                    <option value="active">Đang thuê</option>
+                    <option value="completed">Hoàn thành</option>
+                    <option value="cancelled">Đã hủy</option>
                   </select>
                 </div>
               )}
 
               <div className="form-group">
-                <label>Notes</label>
+                <label>Ghi chú</label>
                 <textarea
                   name="notes"
                   defaultValue={editingRental?.notes}
-                  placeholder="Additional rental notes..."
+                  placeholder="Ghi chú thêm về đơn thuê..."
                 />
               </div>
 
               <div className="modal-footer">
                 <button type="button" onClick={() => setShowModal(false)} className="btn btn-secondary">
-                  Cancel
+                  Hủy
                 </button>
                 <button type="submit" className="btn btn-primary">
-                  {editingRental ? 'Update' : 'Create Rental'}
+                  {editingRental ? 'Cập nhật' : 'Tạo đơn thuê'}
                 </button>
               </div>
             </form>

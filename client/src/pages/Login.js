@@ -28,13 +28,13 @@ function Login() {
     <div className="login-container">
       <div className="login-box">
         <h1>📷 LensyCam</h1>
-        <p>Camera Rental Management System</p>
+        <p>Hệ thống quản lý cho thuê máy ảnh</p>
 
         {error && <div className="alert alert-error">{error}</div>}
 
         <form onSubmit={handleSubmit}>
           <div className="form-group">
-            <label>Username</label>
+            <label>Tên đăng nhập</label>
             <input
               type="text"
               value={credentials.username}
@@ -45,7 +45,7 @@ function Login() {
           </div>
 
           <div className="form-group">
-            <label>Password</label>
+            <label>Mật khẩu</label>
             <input
               type="password"
               value={credentials.password}
@@ -55,12 +55,12 @@ function Login() {
           </div>
 
           <button type="submit" className="btn btn-primary" disabled={loading}>
-            {loading ? 'Logging in...' : 'Login'}
+            {loading ? 'Đang đăng nhập...' : 'Đăng nhập'}
           </button>
         </form>
 
         <p style={{ marginTop: '20px', fontSize: '12px', textAlign: 'center', color: '#999' }}>
-          Default: admin / admin123
+          Mặc định: admin / admin123
         </p>
       </div>
     </div>

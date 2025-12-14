@@ -45,7 +45,7 @@ function Customers() {
   };
 
   const handleDelete = async (id) => {
-    if (!window.confirm('Are you sure you want to delete this customer?')) return;
+    if (!window.confirm('Bạn có chắc chắn muốn xóa khách hàng này?')) return;
 
     try {
       await api.deleteCustomer(id);
@@ -60,13 +60,13 @@ function Customers() {
     setShowModal(true);
   };
 
-  if (loading) return <div className="loading">Loading customers</div>;
+  if (loading) return <div className="loading">Đang tải khách hàng</div>;
 
   return (
     <div>
       <div className="page-header">
-        <h2>Customers</h2>
-        <p>Manage your customer database</p>
+        <h2>Khách hàng</h2>
+        <p>Quản lý cơ sở dữ liệu khách hàng</p>
       </div>
 
       {error && <div className="alert alert-error">{error}</div>}
@@ -76,13 +76,13 @@ function Customers() {
           <div className="search-bar">
             <input
               type="text"
-              placeholder="Search customers..."
+              placeholder="Tìm kiếm khách hàng..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
             />
           </div>
           <button onClick={() => openModal()} className="btn btn-primary">
-            + Add Customer
+            + Thêm Khách hàng
           </button>
         </div>
 
@@ -90,12 +90,12 @@ function Customers() {
           <table>
             <thead>
               <tr>
-                <th>Name</th>
+                <th>Tên</th>
                 <th>Email</th>
-                <th>Phone</th>
-                <th>Address</th>
-                <th>ID Number</th>
-                <th>Actions</th>
+                <th>Số điện thoại</th>
+                <th>Địa chỉ</th>
+                <th>Số CMND</th>
+                <th>Hành động</th>
               </tr>
             </thead>
             <tbody>
@@ -112,13 +112,13 @@ function Customers() {
                         onClick={() => openModal(customer)}
                         className="btn btn-secondary btn-small"
                       >
-                        Edit
+                        Sửa
                       </button>
                       <button
                         onClick={() => handleDelete(customer.id)}
                         className="btn btn-danger btn-small"
                       >
-                        Delete
+                        Xóa
                       </button>
                     </div>
                   </td>
@@ -130,8 +130,8 @@ function Customers() {
 
         {customers.length === 0 && (
           <div className="empty-state">
-            <h3>No customers found</h3>
-            <p>Add your first customer to get started</p>
+            <h3>Không tìm thấy khách hàng</h3>
+            <p>Thêm khách hàng đầu tiên để bắt đầu</p>
           </div>
         )}
       </div>
@@ -140,18 +140,18 @@ function Customers() {
         <div className="modal-overlay" onClick={() => setShowModal(false)}>
           <div className="modal" onClick={(e) => e.stopPropagation()}>
             <div className="modal-header">
-              <h3>{editingCustomer ? 'Edit Customer' : 'Add Customer'}</h3>
+              <h3>{editingCustomer ? 'Sửa Khách hàng' : 'Thêm Khách hàng'}</h3>
               <button onClick={() => setShowModal(false)} className="close-btn">&times;</button>
             </div>
 
             <form onSubmit={handleSubmit}>
               <div className="form-group">
-                <label>Full Name *</label>
+                <label>Họ tên *</label>
                 <input
                   name="name"
                   defaultValue={editingCustomer?.name}
                   required
-                  placeholder="John Doe"
+                  placeholder="Nguyễn Văn A"
                 />
               </div>
 
@@ -162,55 +162,55 @@ function Customers() {
                     type="email"
                     name="email"
                     defaultValue={editingCustomer?.email}
-                    placeholder="john@example.com"
+                    placeholder="email@example.com"
                   />
                 </div>
 
                 <div className="form-group">
-                  <label>Phone</label>
+                  <label>Số điện thoại</label>
                   <input
                     type="tel"
                     name="phone"
                     defaultValue={editingCustomer?.phone}
-                    placeholder="+1 234 567 8900"
+                    placeholder="0912 345 678"
                   />
                 </div>
               </div>
 
               <div className="form-group">
-                <label>Address</label>
+                <label>Địa chỉ</label>
                 <input
                   name="address"
                   defaultValue={editingCustomer?.address}
-                  placeholder="123 Main St, City, State, ZIP"
+                  placeholder="123 Đường ABC, Quận XYZ, TP.HCM"
                 />
               </div>
 
               <div className="form-group">
-                <label>ID Number</label>
+                <label>Số CMND</label>
                 <input
                   name="id_number"
                   defaultValue={editingCustomer?.id_number}
-                  placeholder="Driver's License or ID"
+                  placeholder="CMND hoặc CCCD"
                 />
-                <small>For rental verification purposes</small>
+                <small>Để xác minh khi thuê</small>
               </div>
 
               <div className="form-group">
-                <label>Notes</label>
+                <label>Ghi chú</label>
                 <textarea
                   name="notes"
                   defaultValue={editingCustomer?.notes}
-                  placeholder="Additional notes about the customer..."
+                  placeholder="Thông tin bổ sung về khách hàng..."
                 />
               </div>
 
               <div className="modal-footer">
                 <button type="button" onClick={() => setShowModal(false)} className="btn btn-secondary">
-                  Cancel
+                  Hủy
                 </button>
                 <button type="submit" className="btn btn-primary">
-                  {editingCustomer ? 'Update' : 'Create'}
+                  {editingCustomer ? 'Cập nhật' : 'Tạo mới'}
                 </button>
               </div>
             </form>
