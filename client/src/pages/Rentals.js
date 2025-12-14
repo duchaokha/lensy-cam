@@ -13,6 +13,7 @@ function Rentals() {
   const [rentalType, setRentalType] = useState('daily');
   const [selectedCamera, setSelectedCamera] = useState(null);
   const [startDate, setStartDate] = useState(new Date().toISOString().split('T')[0]);
+  const [endDate, setEndDate] = useState('');
   const [startTime, setStartTime] = useState('09:00');
   const [isNewCustomer, setIsNewCustomer] = useState(false);
 
@@ -454,6 +455,7 @@ function Rentals() {
                         type="date"
                         name="end_date"
                         defaultValue={editingRental?.end_date}
+                        onChange={(e) => setEndDate(e.target.value)}
                         min={startDate}
                         required
                       />
@@ -481,7 +483,7 @@ function Rentals() {
                         type="time"
                         name="end_time"
                         defaultValue={editingRental?.end_time || '17:00'}
-                        min={startTime}
+                        min={startDate === endDate ? startTime : undefined}
                         step="60"
                         required
                       />
