@@ -11,7 +11,7 @@ const dashboardRoutes = require('./routes/dashboard');
 const availabilityRoutes = require('./routes/availability');
 
 const app = express();
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 8899;
 
 // Middleware
 app.use(cors());

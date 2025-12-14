@@ -149,7 +149,7 @@ if docker compose ps | grep -q "Up"; then
     echo -e "${GREEN}════════════════════════════════════════${NC}"
     echo ""
     echo "🌐 Your application is running at:"
-    echo -e "   ${GREEN}http://localhost:5000${NC}"
+    echo -e "   ${GREEN}http://localhost:8899${NC}"
     echo ""
     echo "🔑 Default Login:"
     echo "   Username: admin"
@@ -171,7 +171,7 @@ if docker compose ps | grep -q "Up"; then
     # Try to open browser
     if command -v xdg-open &> /dev/null; then
         sleep 2
-        xdg-open http://localhost:5000 2>/dev/null || true
+        xdg-open http://localhost:8899 2>/dev/null || true
     fi
 else
     echo -e "${RED}❌ Failed to start application${NC}"

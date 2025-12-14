@@ -134,7 +134,7 @@ if docker compose ps | grep -q "Up"; then
     echo -e "${GREEN}════════════════════════════════════════${NC}"
     echo ""
     echo "🌐 Your application is running at:"
-    echo -e "   ${GREEN}http://localhost:5000${NC}"
+    echo -e "   ${GREEN}http://localhost:8899${NC}"
     echo ""
     echo "🔑 Default Login:"
     echo "   Username: admin"
@@ -155,7 +155,7 @@ if docker compose ps | grep -q "Up"; then
     
     # Open browser
     sleep 2
-    open http://localhost:5000
+    open http://localhost:8899
 else
     echo -e "${RED}❌ Failed to start application${NC}"
     echo "Check logs with: docker compose logs"
