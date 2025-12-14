@@ -103,7 +103,7 @@ function Customers() {
                 <tr key={customer.id}>
                   <td><strong>{customer.name}</strong></td>
                   <td>{customer.email || 'N/A'}</td>
-                  <td>{customer.phone}</td>
+                  <td>{customer.phone || 'N/A'}</td>
                   <td>{customer.address || 'N/A'}</td>
                   <td>{customer.id_number || 'N/A'}</td>
                   <td>
@@ -167,12 +167,11 @@ function Customers() {
                 </div>
 
                 <div className="form-group">
-                  <label>Phone *</label>
+                  <label>Phone</label>
                   <input
                     type="tel"
                     name="phone"
                     defaultValue={editingCustomer?.phone}
-                    required
                     placeholder="+1 234 567 8900"
                   />
                 </div>

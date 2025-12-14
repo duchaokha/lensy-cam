@@ -14,6 +14,7 @@ function Rentals() {
   const [selectedCamera, setSelectedCamera] = useState(null);
   const [startDate, setStartDate] = useState(new Date().toISOString().split('T')[0]);
   const [startTime, setStartTime] = useState('09:00');
+  const [isNewCustomer, setIsNewCustomer] = useState(false);
 
   const formatCurrency = (amount) => `${Number(amount).toLocaleString('vi-VN')} ₫`;
   const formatDate = (dateStr) => {
@@ -55,6 +56,39 @@ function Rentals() {
     const rental = Object.fromEntries(formData.entries());
 
     try {
+      // If adding a new customer, check if they exist first
+      if (isNewCustomer && !editingRental) {
+        const name = rental.customer_name;
+        const phone = rental.customer_phone || '';
+        
+        // Check if customer with this name and phone already exists
+        const existingCustomer = customers.find(c => 
+          c.name.toLowerCase() === name.toLowerCase() && 
+          (phone === '' || c.phone === phone || (!c.phone && !phone))
+        );
+        
+        if (existingCustomer) {
+          // Use existing customer
+          rental.customer_id = existingCustomer.id;
+        } else {
+          // Create new customer
+          const customerData = {
+            name: rental.customer_name,
+            phone: rental.customer_phone || '',
+            email: rental.customer_email || '',
+            address: rental.customer_address || ''
+          };
+          const newCustomer = await api.createCustomer(customerData);
+          rental.customer_id = newCustomer.id;
+        }
+        
+        // Remove customer fields from rental object
+        delete rental.customer_name;
+        delete rental.customer_phone;
+        delete rental.customer_email;
+        delete rental.customer_address;
+      }
+
       if (editingRental) {
         await api.updateRental(editingRental.id, rental);
       } else {
@@ -62,6 +96,7 @@ function Rentals() {
       }
       setShowModal(false);
       setEditingRental(null);
+      setIsNewCustomer(false);
       loadData();
     } catch (err) {
       const errorMsg = err.message;
@@ -74,7 +109,7 @@ function Rentals() {
   };
 
   const handleReturn = async (id) => {
-    if (!window.confirm('Mark this rental as returned?')) return;
+    if (!window.confirm('Mark this rental as completed?')) return;
 
     try {
       const returnDate = new Date().toISOString().split('T')[0];
@@ -219,7 +254,7 @@ function Rentals() {
                           onClick={() => handleReturn(rental.id)}
                           className="btn btn-success btn-small"
                         >
-                          Return
+                          Complete
                         </button>
                       )}
                       <button
@@ -303,16 +338,73 @@ function Rentals() {
                   </div>
 
                   <div className="form-group">
-                    <label>Customer *</label>
-                    <select name="customer_id" required>
-                      <option value="">Select a customer</option>
-                      {customers.map((customer) => (
-                        <option key={customer.id} value={customer.id}>
-                          {customer.name} - {customer.phone}
-                        </option>
-                      ))}
-                    </select>
+                    <label>
+                      <input 
+                        type="checkbox" 
+                        checked={isNewCustomer}
+                        onChange={(e) => setIsNewCustomer(e.target.checked)}
+                        style={{ width: 'auto', marginRight: '8px' }}
+                      />
+                      Add New Customer
+                    </label>
                   </div>
+
+                  {isNewCustomer ? (
+                    <>
+                      <div className="form-row">
+                        <div className="form-group">
+                          <label>Customer Name *</label>
+                          <input
+                            type="text"
+                            name="customer_name"
+                            required
+                            placeholder="Enter customer name"
+                          />
+                        </div>
+
+                        <div className="form-group">
+                          <label>Phone Number</label>
+                          <input
+                            type="tel"
+                            name="customer_phone"
+                            placeholder="Enter phone number"
+                          />
+                        </div>
+                      </div>
+
+                      <div className="form-row">
+                        <div className="form-group">
+                          <label>Email (Optional)</label>
+                          <input
+                            type="email"
+                            name="customer_email"
+                            placeholder="Enter email"
+                          />
+                        </div>
+
+                        <div className="form-group">
+                          <label>Address (Optional)</label>
+                          <input
+                            type="text"
+                            name="customer_address"
+                            placeholder="Enter address"
+                          />
+                        </div>
+                      </div>
+                    </>
+                  ) : (
+                    <div className="form-group">
+                      <label>Customer *</label>
+                      <select name="customer_id" required>
+                        <option value="">Select a customer</option>
+                        {customers.map((customer) => (
+                          <option key={customer.id} value={customer.id}>
+                            {customer.name}{customer.phone ? ` - ${customer.phone}` : ''}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+                  )}
                 </>
               )}
 
