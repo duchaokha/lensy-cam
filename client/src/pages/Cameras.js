@@ -267,15 +267,15 @@ function Cameras() {
 
               <div className="form-row">
                 <div className="form-group">
-                  <label>Giá theo ngày *</label>
+                  <label>Giá theo ngày</label>
                   <input
                     type="number"
                     step="0.01"
                     name="daily_rate"
-                    defaultValue={editingCamera?.daily_rate}
-                    required
+                    defaultValue={editingCamera?.daily_rate || 0}
                     placeholder="0.00"
                   />
+                  <small>Để trống hoặc 0 nếu không cho thuê theo ngày</small>
                 </div>
 
                 <div className="form-group">
@@ -284,10 +284,10 @@ function Cameras() {
                     type="number"
                     step="0.01"
                     name="hourly_rate"
-                    defaultValue={editingCamera?.hourly_rate}
+                    defaultValue={editingCamera?.hourly_rate || 0}
                     placeholder="0.00"
                   />
-                  <small>Cho thuê theo giờ</small>
+                  <small>Để trống hoặc 0 nếu không cho thuê theo giờ</small>
                 </div>
               </div>
 

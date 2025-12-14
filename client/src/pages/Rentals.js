@@ -571,16 +571,15 @@ function Rentals() {
 
                   <div className="form-row">
                     <div className="form-group">
-                      <label>Giá theo giờ *</label>
+                      <label>Giá theo giờ</label>
                       <input
                         type="number"
                         step="0.01"
                         name="hourly_rate"
                         defaultValue={editingRental?.hourly_rate || selectedCamera?.hourly_rate}
-                        required
                         placeholder="0.00"
                       />
-                      <small>Giá mỗi giờ</small>
+                      <small>Giá mỗi giờ (tùy chọn nếu đã điền tổng tiền)</small>
                     </div>
 
                     <div className="form-group">
@@ -598,7 +597,7 @@ function Rentals() {
 
                   <div className="form-row">
                     <div className="form-group">
-                      <label>Deposit</label>
+                      <label>Đặt cọc</label>
                       <input
                         type="number"
                         step="0.01"
@@ -606,7 +605,7 @@ function Rentals() {
                         defaultValue={editingRental?.deposit || 0}
                         placeholder="0.00"
                       />
-                      <small>Security deposit</small>
+                      <small>Tiền đặt cọc</small>
                     </div>
                   </div>
                 </>
