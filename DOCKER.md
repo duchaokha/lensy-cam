@@ -17,7 +17,7 @@ docker-compose build
 docker-compose up -d
 ```
 
-The application will be available at: **http://localhost:5000**
+The application will be available at: **http://localhost:8899**
 
 ### 2. View Logs
 
@@ -49,7 +49,7 @@ Create a `.env` file in the project root or edit `docker-compose.yml`:
 
 ```bash
 JWT_SECRET=your-super-secret-jwt-key-change-this
-PORT=5000
+PORT=8899
 NODE_ENV=production
 ```
 
@@ -59,7 +59,7 @@ To change the port, edit `docker-compose.yml`:
 
 ```yaml
 ports:
-  - "8080:5000"  # Access on http://localhost:8080
+  - "8080:8899"  # Access on http://localhost:8080
 ```
 
 ---
@@ -112,7 +112,7 @@ server {
     server_name yourdomain.com;
 
     location / {
-        proxy_pass http://localhost:5000;
+        proxy_pass http://localhost:8899;
         proxy_http_version 1.1;
         proxy_set_header Upgrade $http_upgrade;
         proxy_set_header Connection 'upgrade';
@@ -203,7 +203,7 @@ docker-compose logs -f
 docker-compose logs lensy-cam
 
 # Check if port is in use
-lsof -ti:5000
+lsof -ti:8899
 
 # Remove and recreate
 docker-compose down
@@ -248,7 +248,7 @@ services:
   web:
     build: .
     ports:
-      - "5000:5000"
+      - "8899:8899"
     depends_on:
       - db
     environment:
@@ -296,7 +296,7 @@ services:
 The application includes a health endpoint:
 
 ```bash
-curl http://localhost:5000/api/health
+curl http://localhost:8899/api/health
 ```
 
 ### Container Stats

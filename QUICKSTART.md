@@ -65,7 +65,7 @@ Press `Ctrl + C` in the terminal
 **Port in use?**
 ```bash
 # Kill process on port
-lsof -ti:5000 | xargs kill -9
+lsof -ti:8899 | xargs kill -9
 ```
 
 **Database issues?**

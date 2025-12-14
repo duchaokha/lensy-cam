@@ -204,7 +204,7 @@ Once you're running, daily tasks:
 
 **Application won't start:**
 - [ ] Check terminal for error messages
-- [ ] Verify ports 3000 and 5000 are free
+- [ ] Verify ports 3000 and 8899 are free
 - [ ] Try restarting: `Ctrl+C` then `npm run dev` again
 
 **Can't login:**

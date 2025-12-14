@@ -13,7 +13,7 @@ npm run build
 #### 2. Update Environment
 Create/edit `.env`:
 ```env
-PORT=5000
+PORT=8899
 JWT_SECRET=change-this-to-a-long-random-string-abc123xyz
 NODE_ENV=production
 ```
@@ -35,7 +35,7 @@ ipconfig
 
 Other computers on the same network can access:
 ```
-http://YOUR_IP_ADDRESS:5000
+http://YOUR_IP_ADDRESS:8899
 ```
 
 ### Option 2: Cloud Deployment
@@ -74,14 +74,14 @@ WORKDIR /app/client
 RUN npm install && npm run build
 WORKDIR /app
 ENV NODE_ENV=production
-EXPOSE 5000
+EXPOSE 8899
 CMD ["node", "server/index.js"]
 ```
 
 Build and run:
 ```bash
 docker build -t lensy-cam .
-docker run -p 5000:5000 -v $(pwd)/rental.db:/app/rental.db lensy-cam
+docker run -p 8899:8899 -v $(pwd)/rental.db:/app/rental.db lensy-cam
 ```
 
 ## Security Checklist for Production
@@ -182,8 +182,8 @@ chown www-data:www-data rental.db  # If using nginx/apache
 
 ### Port Already in Use
 ```bash
-# Find process using port 5000
-lsof -i :5000
+# Find process using port 8899
+lsof -i :8899
 # Kill it
 kill -9 PID
 ```

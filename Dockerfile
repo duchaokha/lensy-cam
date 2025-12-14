@@ -25,11 +25,11 @@ COPY --from=client-build /app/client/build ./client/build
 RUN mkdir -p /app/data
 
 # Expose port
-EXPOSE 5000
+EXPOSE 8899
 
 # Set environment variables
 ENV NODE_ENV=production
-ENV PORT=5000
+ENV PORT=8899
 
 # Start the application
 CMD ["node", "server/index.js"]

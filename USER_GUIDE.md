@@ -105,7 +105,7 @@ The application will open automatically at http://localhost:3000
 npm run dev
 ```
 - Frontend: http://localhost:3000
-- Backend: http://localhost:5000
+- Backend: http://localhost:8899
 
 ### Production Build
 ```bash
@@ -188,7 +188,7 @@ lensy-cam/
 ### Environment Variables (.env)
 
 ```env
-PORT=5000                    # Backend server port
+PORT=8899                    # Backend server port
 JWT_SECRET=your-secret-key   # Change this for security!
 NODE_ENV=development         # development or production
 ```
@@ -291,10 +291,10 @@ Authorization: Bearer <token>
 ## 🐛 Troubleshooting
 
 ### Port already in use
-If port 3000 or 5000 is busy:
+If port 3000 or 8899 is busy:
 ```bash
-# Kill process on port 5000 (backend)
-lsof -ti:5000 | xargs kill -9
+# Kill process on port 8899 (backend)
+lsof -ti:8899 | xargs kill -9
 
 # Kill process on port 3000 (frontend)
 lsof -ti:3000 | xargs kill -9

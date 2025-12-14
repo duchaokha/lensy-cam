@@ -232,8 +232,8 @@ npm start            # Run production server
 ## 🐛 Troubleshooting
 
 **Can't start server?**
-- Check if ports 3000/5000 are available
-- Run `lsof -ti:5000 | xargs kill -9` to free port
+- Check if ports 3000/8899 are available
+- Run `lsof -ti:8899 | xargs kill -9` to free port
 
 **Database issues?**
 - Check `rental.db` permissions
