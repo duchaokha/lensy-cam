@@ -247,11 +247,11 @@ function Rentals() {
                   </td>
                   <td>
                     {formatDate(rental.start_date)}
-                    {rental.start_time && <><br/><small>{formatTime(rental.start_time)}</small></>}
+                    {rental.start_time && <><br/><span style={{ fontSize: '14px', fontWeight: '500' }}>{formatTime(rental.start_time)}</span></>}
                   </td>
                   <td>
                     {formatDate(rental.end_date || rental.start_date)}
-                    {rental.end_time && <><br/><small>{formatTime(rental.end_time)}</small></>}
+                    {rental.end_time && <><br/><span style={{ fontSize: '14px', fontWeight: '500' }}>{formatTime(rental.end_time)}</span></>}
                   </td>
                   <td>
                     {rental.rental_type === 'hourly' ? (
@@ -458,6 +458,34 @@ function Rentals() {
                         required
                       />
                       <small>Must be after or equal to start date</small>
+                    </div>
+                  </div>
+
+                  <div className="form-row">
+                    <div className="form-group">
+                      <label>Start Time *</label>
+                      <input
+                        type="time"
+                        name="start_time"
+                        defaultValue={editingRental?.start_time || '09:00'}
+                        onChange={(e) => setStartTime(e.target.value)}
+                        step="60"
+                        required
+                      />
+                      <small>Pickup time</small>
+                    </div>
+
+                    <div className="form-group">
+                      <label>End Time *</label>
+                      <input
+                        type="time"
+                        name="end_time"
+                        defaultValue={editingRental?.end_time || '17:00'}
+                        min={startTime}
+                        step="60"
+                        required
+                      />
+                      <small>Return time</small>
                     </div>
                   </div>
 
