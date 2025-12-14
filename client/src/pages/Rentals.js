@@ -40,7 +40,13 @@ function Rentals() {
         api.getCameras(), // Get all cameras, we'll check availability by date
         api.getCustomers()
       ]);
-      setRentals(rentalsData);
+      
+      // Sort rentals by start_date (oldest first)
+      const sortedRentals = rentalsData.sort((a, b) => {
+        return new Date(a.start_date) - new Date(b.start_date);
+      });
+      
+      setRentals(sortedRentals);
       setCameras(camerasData);
       setCustomers(customersData);
     } catch (err) {
@@ -48,6 +54,24 @@ function Rentals() {
     } finally {
       setLoading(false);
     }
+  };
+
+  const getRowColor = (rental, index) => {
+    if (isOverdue(rental)) return '#fff3cd';
+    
+    // Build a color map based on unique dates
+    const colors = ['#e3f2fd', '#f3e5f5', '#e8f5e9', '#fff3e0', '#fce4ec'];
+    const dateColorMap = {};
+    let colorIndex = 0;
+    
+    rentals.forEach((r) => {
+      if (!dateColorMap[r.start_date]) {
+        dateColorMap[r.start_date] = colors[colorIndex % colors.length];
+        colorIndex++;
+      }
+    });
+    
+    return dateColorMap[rental.start_date] || '#ffffff';
   };
 
   const handleSubmit = async (e) => {
@@ -208,8 +232,8 @@ function Rentals() {
               </tr>
             </thead>
             <tbody>
-              {rentals.map((rental) => (
-                <tr key={rental.id} style={{ backgroundColor: isOverdue(rental) ? '#fff3cd' : 'transparent' }}>
+              {rentals.map((rental, index) => (
+                <tr key={rental.id} style={{ backgroundColor: getRowColor(rental, index) }}>
                   <td>#{rental.id}</td>
                   <td>
                     <strong>{rental.camera_name}</strong>

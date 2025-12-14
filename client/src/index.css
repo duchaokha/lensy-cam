@@ -26,8 +26,8 @@ code {
 /* Sidebar */
 .sidebar {
   width: 250px;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: white;
+  background: linear-gradient(135deg, #FFD1D0 0%, #FFB3B0 100%);
+  color: #333;
   padding: 20px;
   position: fixed;
   height: 100vh;
@@ -42,7 +42,7 @@ code {
 .menu-toggle {
   background: none;
   border: none;
-  color: white;
+  color: #333;
   font-size: 24px;
   cursor: pointer;
   padding: 5px;
@@ -55,7 +55,7 @@ code {
 .sidebar-header {
   margin-bottom: 30px;
   padding-bottom: 20px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
 }
 
 .sidebar-header h1 {
@@ -80,7 +80,7 @@ code {
   display: flex;
   align-items: center;
   padding: 12px 15px;
-  color: white;
+  color: #333;
   text-decoration: none;
   border-radius: 8px;
   transition: background 0.3s;
@@ -88,7 +88,7 @@ code {
 
 .nav-link:hover,
 .nav-link.active {
-  background: rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.5);
 }
 
 .nav-link span {
@@ -100,16 +100,16 @@ code {
   margin-top: 20px;
   padding: 10px 15px;
   width: 100%;
-  background: rgba(255, 255, 255, 0.1);
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  color: white;
+  background: rgba(255, 255, 255, 0.5);
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  color: #333;
   border-radius: 8px;
   cursor: pointer;
   transition: background 0.3s;
 }
 
 .logout-btn:hover {
-  background: rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.7);
 }
 
 /* Main Content */
@@ -223,14 +223,14 @@ code {
 }
 
 .btn-primary {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: white;
+  background: linear-gradient(135deg, #FFD1D0 0%, #FFB3B0 100%);
+  color: #333;
   width: 100%;
 }
 
 .btn-primary:hover {
   transform: translateY(-2px);
-  box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+  box-shadow: 0 5px 15px rgba(255, 209, 208, 0.4);
 }
 
 .btn-secondary {
@@ -380,8 +380,8 @@ tbody tr:hover {
 }
 
 .badge-warning {
-  background: #fff3cd;
-  color: #856404;
+  background: #FFD1D0;
+  color: #8B4545;
 }
 
 .badge-danger {

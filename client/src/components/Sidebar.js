@@ -34,7 +34,10 @@ function Sidebar({ isOpen, onClose }) {
       
       <div className={`sidebar ${isOpen ? 'mobile-open' : ''}`}>
         <div className="sidebar-header">
-          <h1>📷 LensyCam</h1>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+            <img src="/logo.png" alt="Logo" style={{ width: '40px', height: '40px', objectFit: 'contain' }} />
+            <h1 style={{ margin: 0 }}>LensyCam</h1>
+          </div>
           <p>Welcome, {user?.username}</p>
         </div>
 
