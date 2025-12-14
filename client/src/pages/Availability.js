@@ -20,12 +20,12 @@ function Availability() {
     
     // Validate required fields
     if (!searchParams.start_date || !searchParams.end_date) {
-      setError('Please select start and end dates');
+      setError('Vui lòng chọn ngày bắt đầu và kết thúc');
       return;
     }
 
     if (rentalType === 'hourly' && (!searchParams.start_time || !searchParams.end_time)) {
-      setError('Please select start and end time for hourly rentals');
+      setError('Vui lòng chọn giờ bắt đầu và kết thúc cho thuê theo giờ');
       return;
     }
 
@@ -36,7 +36,7 @@ function Availability() {
     // Safety timeout to prevent infinite loading
     const timeoutId = setTimeout(() => {
       setLoading(false);
-      setError('Request timeout. Please try again.');
+      setError('Hết thời gian chờ. Vui lòng thử lại.');
     }, 10000);
 
     try {
@@ -59,7 +59,7 @@ function Availability() {
     } catch (err) {
       console.error('Availability check error:', err);
       clearTimeout(timeoutId);
-      setError(err.message || 'Failed to check availability. Please try again.');
+      setError(err.message || 'Không thể kiểm tra. Vui lòng thử lại.');
       setAvailableCameras(null);
     } finally {
       clearTimeout(timeoutId);
@@ -89,33 +89,33 @@ function Availability() {
   return (
     <div>
       <div className="page-header">
-        <h2>📅 Check Availability</h2>
-        <p>Find available cameras for your rental period</p>
+        <h2>📅 Kiểm Tra Tình Trạng</h2>
+        <p>Tìm camera có sẵn cho khoảng thời gian thuê</p>
       </div>
 
       {error && <div className="alert alert-error">{error}</div>}
 
       <div className="card">
         <div className="card-header">
-          <h3>Search Parameters</h3>
+          <h3>Thông Tin Tìm Kiếm</h3>
         </div>
 
         <form onSubmit={handleSearch}>
           <div className="form-group">
-            <label>Rental Type</label>
+            <label>Loại Thuê</label>
             <select 
               value={rentalType} 
               onChange={(e) => setRentalType(e.target.value)}
               required
             >
-              <option value="daily">Daily Rental</option>
-              <option value="hourly">Hourly Rental</option>
+              <option value="daily">Thuê Theo Ngày</option>
+              <option value="hourly">Thuê Theo Giờ</option>
             </select>
           </div>
 
           <div className="form-row">
             <div className="form-group">
-              <label>Start Date *</label>
+              <label>Ngày Bắt Đầu *</label>
               <input
                 type="date"
                 name="start_date"
@@ -126,7 +126,7 @@ function Availability() {
             </div>
 
             <div className="form-group">
-              <label>End Date *</label>
+              <label>Ngày Kết Thúc *</label>
               <input
                 type="date"
                 name="end_date"
@@ -141,7 +141,7 @@ function Availability() {
           {rentalType === 'hourly' && (
             <div className="form-row">
               <div className="form-group">
-                <label>Start Time *</label>
+                <label>Giờ Bắt Đầu *</label>
                 <input
                   type="time"
                   name="start_time"
@@ -153,7 +153,7 @@ function Availability() {
               </div>
 
               <div className="form-group">
-                <label>End Time *</label>
+                <label>Giờ Kết Thúc *</label>
                 <input
                   type="time"
                   name="end_time"
@@ -168,10 +168,10 @@ function Availability() {
 
           <div style={{ display: 'flex', gap: '10px', marginTop: '20px' }}>
             <button type="submit" className="btn btn-primary" disabled={loading}>
-              {loading ? 'Searching...' : '🔍 Check Availability'}
+              {loading ? 'Đang tìm...' : '🔍 Kiểm Tra'}
             </button>
             <button type="button" className="btn btn-secondary" onClick={handleReset}>
-              Clear
+              Xóa
             </button>
           </div>
         </form>
@@ -182,8 +182,8 @@ function Availability() {
           <div className="card-header">
             <h3>
               {availableCameras.length > 0 
-                ? `✅ ${availableCameras.length} Camera${availableCameras.length !== 1 ? 's' : ''} Available`
-                : '❌ No Cameras Available'
+                ? `✅ ${availableCameras.length} Camera Có Sẵn`
+                : '❌ Không Có Camera Nào'
               }
             </h3>
           </div>
@@ -194,14 +194,14 @@ function Availability() {
                 <div key={camera.id} className="stat-card">
                   <h4>{camera.name}</h4>
                   <div style={{ marginTop: '10px', fontSize: '14px' }}>
-                    <p><strong>Brand:</strong> {camera.brand} {camera.model}</p>
-                    <p><strong>Category:</strong> {camera.category}</p>
-                    <p><strong>Status:</strong> <span className={`badge badge-${camera.status === 'available' ? 'success' : 'secondary'}`}>{camera.status}</span></p>
-                    <p><strong>Condition:</strong> {camera.condition}</p>
+                    <p><strong>Hãng:</strong> {camera.brand} {camera.model}</p>
+                    <p><strong>Loại:</strong> {camera.category}</p>
+                    <p><strong>Tình trạng:</strong> <span className={`badge badge-${camera.status === 'available' ? 'success' : 'secondary'}`}>{camera.status}</span></p>
+                    <p><strong>Chất lượng:</strong> {camera.condition}</p>
                     <div style={{ marginTop: '15px', paddingTop: '15px', borderTop: '1px solid #eee' }}>
-                      <p><strong>Daily Rate:</strong> {formatCurrency(camera.daily_rate)}</p>
+                      <p><strong>Giá theo ngày:</strong> {formatCurrency(camera.daily_rate)}</p>
                       {camera.hourly_rate && (
-                        <p><strong>Hourly Rate:</strong> {formatCurrency(camera.hourly_rate)}</p>
+                        <p><strong>Giá theo giờ:</strong> {formatCurrency(camera.hourly_rate)}</p>
                       )}
                     </div>
                   </div>
@@ -210,8 +210,8 @@ function Availability() {
             </div>
           ) : (
             <div className="empty-state">
-              <h3>No cameras available for this time period</h3>
-              <p>Try adjusting your search dates or check our rental calendar</p>
+              <h3>Không có camera nào trong khoảng thời gian này</h3>
+              <p>Thử điều chỉnh ngày tìm kiếm hoặc kiểm tra lịch thuê</p>
             </div>
           )}
         </div>
