@@ -47,7 +47,7 @@ class CalendarService {
     }
 
     try {
-      const { start_date, end_date, start_time, end_time, rental_type } = rental;
+      const { start_date, end_date, start_time, end_time } = rental;
       
       // Build event title
       const title = `📷 ${camera.name} - ${customer.name}`;
@@ -57,7 +57,6 @@ class CalendarService {
         `Khách hàng: ${customer.name}`,
         customer.phone ? `Điện thoại: ${customer.phone}` : '',
         `Camera: ${camera.brand} ${camera.model}`,
-        `Loại thuê: ${rental_type === 'daily' ? 'Theo ngày' : 'Theo giờ'}`,
         rental.total_amount ? `Tổng tiền: ${Number(rental.total_amount).toLocaleString('vi-VN')} ₫` : '',
         rental.deposit ? `Đặt cọc: ${Number(rental.deposit).toLocaleString('vi-VN')} ₫` : '',
         rental.notes ? `\nGhi chú: ${rental.notes}` : ''
@@ -120,7 +119,7 @@ class CalendarService {
     }
 
     try {
-      const { start_date, end_date, start_time, end_time, rental_type } = rental;
+      const { start_date, end_date, start_time, end_time } = rental;
       
       const title = `📷 ${camera.name} - ${customer.name}`;
       
@@ -128,7 +127,6 @@ class CalendarService {
         `Khách hàng: ${customer.name}`,
         customer.phone ? `Điện thoại: ${customer.phone}` : '',
         `Camera: ${camera.brand} ${camera.model}`,
-        `Loại thuê: ${rental_type === 'daily' ? 'Theo ngày' : 'Theo giờ'}`,
         rental.total_amount ? `Tổng tiền: ${Number(rental.total_amount).toLocaleString('vi-VN')} ₫` : '',
         rental.deposit ? `Đặt cọc: ${Number(rental.deposit).toLocaleString('vi-VN')} ₫` : '',
         rental.notes ? `\nGhi chú: ${rental.notes}` : ''

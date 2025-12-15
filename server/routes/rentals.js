@@ -85,30 +85,14 @@ router.post('/', async (req, res) => {
       return res.status(404).json({ error: 'Camera not found' });
     }
 
-    // Check for time conflicts with existing active rentals
-    let conflictingRental;
-    
-    if (rental_type === 'hourly' && start_time && end_time) {
-      // For hourly rentals, check same-day time conflicts
-      conflictingRental = await db.get(
-        `SELECT * FROM rentals 
-         WHERE camera_id = ? 
-         AND status = 'active'
-         AND start_date = ?
-         AND rental_type = 'hourly'
-         AND NOT (end_time <= ? OR start_time >= ?)`,
-        [camera_id, start_date, start_time, end_time]
-      );
-    } else {
-      // For daily rentals, check date conflicts
-      conflictingRental = await db.get(
-        `SELECT * FROM rentals 
-         WHERE camera_id = ? 
-         AND status = 'active'
-         AND NOT (end_date < ? OR start_date > ?)`,
-        [camera_id, start_date, end_date]
-      );
-    }
+    // Check for date conflicts with existing active rentals
+    const conflictingRental = await db.get(
+      `SELECT * FROM rentals 
+       WHERE camera_id = ? 
+       AND status = 'active'
+       AND NOT (end_date < ? OR start_date > ?)`,
+      [camera_id, start_date, end_date]
+    );
 
     if (conflictingRental) {
       return res.status(400).json({ 
@@ -128,15 +112,6 @@ router.post('/', async (req, res) => {
     if (custom_total_amount && parseFloat(custom_total_amount) > 0) {
       // Use custom amount provided by user
       total_amount = parseFloat(custom_total_amount);
-    } else if (rental_type === 'hourly' && start_time && end_time && hourly_rate) {
-      // Calculate hours for hourly rental
-      const [startHour, startMin] = start_time.split(':').map(Number);
-      const [endHour, endMin] = end_time.split(':').map(Number);
-      const startMinutes = startHour * 60 + startMin;
-      const endMinutes = endHour * 60 + endMin;
-      const totalMinutes = endMinutes - startMinutes;
-      const hours = Math.ceil(totalMinutes / 60);
-      total_amount = hours * hourly_rate;
     } else {
       // Calculate days for daily rental
       const start = new Date(start_date);
@@ -180,7 +155,7 @@ router.put('/:id', async (req, res) => {
   try {
     const {
       start_date, end_date, start_time, end_time,
-      daily_rate, hourly_rate, rental_type, deposit,
+      daily_rate, deposit,
       actual_return_date, status, notes, custom_total_amount
     } = req.body;
 
@@ -189,9 +164,8 @@ router.put('/:id', async (req, res) => {
       return res.status(404).json({ error: 'Rental not found' });
     }
 
-    // Recalculate total based on rental type (use custom amount if provided)
+    // Recalculate total based on dates (use custom amount if provided)
     let total_amount = rental.total_amount;
-    const currentRentalType = rental_type || rental.rental_type || 'daily';
     
     if (custom_total_amount && parseFloat(custom_total_amount) > 0) {
       // Use custom amount provided by user
@@ -206,7 +180,7 @@ router.put('/:id', async (req, res) => {
     await db.run(
       `UPDATE rentals SET 
        start_date = ?, end_date = ?, start_time = ?, end_time = ?,
-       daily_rate = ?, hourly_rate = ?, rental_type = ?,
+       daily_rate = ?,
        total_amount = ?, deposit = ?, actual_return_date = ?,
        status = ?, notes = ?
        WHERE id = ?`,
@@ -216,8 +190,6 @@ router.put('/:id', async (req, res) => {
         start_time || rental.start_time,
         end_time || rental.end_time,
         daily_rate || rental.daily_rate,
-        hourly_rate || rental.hourly_rate,
-        currentRentalType,
         total_amount,
         deposit !== undefined ? deposit : rental.deposit,
         actual_return_date,

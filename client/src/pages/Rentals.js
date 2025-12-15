@@ -178,15 +178,15 @@ function Rentals() {
     const now = new Date();
     const endDate = new Date(rental.end_date || rental.start_date);
     
-    // For hourly rentals, check both date and time
-    if (rental.rental_type === 'hourly' && rental.end_time) {
+    // If end time is specified, check both date and time
+    if (rental.end_time) {
       const [hours, minutes] = rental.end_time.split(':').map(Number);
       endDate.setHours(hours, minutes, 0, 0);
       return endDate < now;
     }
     
-    // For daily rentals, just check the date
-    endDate.setHours(23, 59, 59, 999); // End of the day
+    // Otherwise, check end of the day
+    endDate.setHours(23, 59, 59, 999);
     return endDate < now;
   };
 
