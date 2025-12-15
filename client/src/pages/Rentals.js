@@ -185,10 +185,35 @@ function Rentals() {
     setShowModal(true);
   };
 
-  const calculateDays = (startDate, endDate) => {
-    const start = new Date(startDate);
-    const end = new Date(endDate);
-    return Math.ceil((end - start) / (1000 * 60 * 60 * 24)) + 1;
+  const calculateDays = (startDate, endDate, startTime, endTime) => {
+    // When times are provided, calculate based on actual duration
+    if (startTime && endTime) {
+      const startDateTime = new Date(`${startDate}T${startTime}`);
+      const endDateTime = new Date(`${endDate}T${endTime}`);
+      const totalHours = (endDateTime - startDateTime) / (1000 * 60 * 60);
+      
+      // If less than 24 hours, show only hours
+      if (totalHours < 24) {
+        return `${totalHours} giờ`;
+      }
+      
+      // Show as days and hours
+      const days = Math.floor(totalHours / 24);
+      const remainingHours = totalHours % 24;
+      
+      if (remainingHours === 0) {
+        return `${days} ngày`;
+      }
+      return `${days} ngày ${remainingHours} giờ`;
+    }
+    
+    // No times provided: use calendar days
+    const [startYear, startMonth, startDay] = startDate.split('-').map(Number);
+    const [endYear, endMonth, endDay] = endDate.split('-').map(Number);
+    const start = new Date(Date.UTC(startYear, startMonth - 1, startDay));
+    const end = new Date(Date.UTC(endYear, endMonth - 1, endDay));
+    const days = Math.floor((end - start) / (1000 * 60 * 60 * 24)) + 1;
+    return `${days} ngày`;
   };
 
   const isOverdue = (rental) => {
@@ -343,14 +368,7 @@ function Rentals() {
                     {rental.end_time && <><br/><span style={{ fontSize: '14px', fontWeight: '500' }}>{formatTime(rental.end_time)}</span></>}
                   </td>
                   <td>
-                    {rental.start_time && rental.end_time ? (
-                      <span>
-                        {calculateDays(rental.start_date, rental.end_date)} ngày<br/>
-                        <small>{Math.ceil(((new Date(`2000-01-01 ${rental.end_time}`) - new Date(`2000-01-01 ${rental.start_time}`)) / (1000 * 60 * 60)))} giờ</small>
-                      </span>
-                    ) : (
-                      <span>{calculateDays(rental.start_date, rental.end_date)} ngày</span>
-                    )}
+                    {calculateDays(rental.start_date, rental.end_date, rental.start_time, rental.end_time)}
                   </td>
                   <td>{formatCurrency(rental.total_amount)}</td>
                   <td>{formatCurrency(rental.deposit)}</td>

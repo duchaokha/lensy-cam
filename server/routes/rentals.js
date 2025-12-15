@@ -6,6 +6,33 @@ const calendarService = require('../services/calendar');
 const router = express.Router();
 router.use(authMiddleware);
 
+/**
+ * Helper function to calculate the number of inclusive calendar days between two dates.
+ * This function normalizes dates to UTC midnight to avoid local timezone issues
+ * and returns the number of calendar days the item is rented for.
+ * @param {string} startDateString - The start date in 'YYYY-MM-DD' format.
+ * @param {string} endDateString - The end date in 'YYYY-MM-DD' format.
+ * @returns {number} The number of inclusive calendar days.
+ */
+const calculateRentalDays = (startDateString, endDateString) => {
+  // Parse date strings directly as UTC to avoid timezone issues
+  const [startYear, startMonth, startDay] = startDateString.split('-').map(Number);
+  const [endYear, endMonth, endDay] = endDateString.split('-').map(Number);
+  
+  // Create UTC dates (month is 0-indexed in Date.UTC)
+  const startDate = new Date(Date.UTC(startYear, startMonth - 1, startDay));
+  const endDate = new Date(Date.UTC(endYear, endMonth - 1, endDay));
+
+  const timeDifference = endDate.getTime() - startDate.getTime();
+  const oneDay = 1000 * 60 * 60 * 24;
+
+  // Calculate days inclusively: (timeDifference / oneDay) gives the number of 
+  // 24-hour periods. Adding 1 makes it the inclusive number of calendar days.
+  const days = Math.floor(timeDifference / oneDay) + 1;
+  
+  return days;
+};
+
 // Get all rentals
 router.get('/', async (req, res) => {
   try {
@@ -121,11 +148,16 @@ router.post('/', async (req, res) => {
     if (custom_total_amount && parseFloat(custom_total_amount) > 0) {
       // Use custom amount provided by user
       total_amount = parseFloat(custom_total_amount);
+    } else if (start_time && end_time) {
+      // When times are provided, calculate based on actual duration
+      const startDateTime = new Date(`${start_date}T${start_time}`);
+      const endDateTime = new Date(`${end_date}T${end_time}`);
+      const hours = (endDateTime - startDateTime) / (1000 * 60 * 60);
+      const days = Math.max(hours / 24, 0.5); // Minimum 0.5 day
+      total_amount = days * daily_rate;
     } else {
-      // Calculate days for daily rental
-      const start = new Date(start_date);
-      const end = new Date(end_date);
-      const days = Math.ceil((end - start) / (1000 * 60 * 60 * 24)) + 1;
+      // No times provided: use calendar days
+      const days = calculateRentalDays(start_date, end_date);
       total_amount = days * daily_rate;
     }
 
@@ -176,14 +208,29 @@ router.put('/:id', async (req, res) => {
     // Recalculate total based on dates (use custom amount if provided)
     let total_amount = rental.total_amount;
     
+    const new_start_date = start_date || rental.start_date;
+    const new_end_date = end_date || rental.end_date;
+    const new_daily_rate = daily_rate || rental.daily_rate;
+
     if (custom_total_amount && parseFloat(custom_total_amount) > 0) {
       // Use custom amount provided by user
       total_amount = parseFloat(custom_total_amount);
-    } else if (start_date && end_date && daily_rate) {
-      const start = new Date(start_date);
-      const end = new Date(end_date);
-      const days = Math.ceil((end - start) / (1000 * 60 * 60 * 24)) + 1;
-      total_amount = days * daily_rate;
+    } else if (new_start_date && new_end_date && new_daily_rate) {
+      const start_time_value = start_time !== undefined ? start_time : rental.start_time;
+      const end_time_value = end_time !== undefined ? end_time : rental.end_time;
+      
+      if (start_time_value && end_time_value) {
+        // When times are provided, calculate based on actual duration
+        const startDateTime = new Date(`${new_start_date}T${start_time_value}`);
+        const endDateTime = new Date(`${new_end_date}T${end_time_value}`);
+        const hours = (endDateTime - startDateTime) / (1000 * 60 * 60);
+        const days = Math.max(hours / 24, 0.5); // Minimum 0.5 day
+        total_amount = days * new_daily_rate;
+      } else {
+        // No times provided: use calendar days
+        const days = calculateRentalDays(new_start_date, new_end_date);
+        total_amount = days * new_daily_rate;
+      }
     }
 
     await db.run(
@@ -194,14 +241,14 @@ router.put('/:id', async (req, res) => {
        status = ?, notes = ?
        WHERE id = ?`,
       [
-        start_date || rental.start_date,
-        end_date || rental.end_date,
-        start_time || rental.start_time,
-        end_time || rental.end_time,
-        daily_rate || rental.daily_rate,
+        new_start_date,
+        new_end_date,
+        start_time !== undefined ? start_time : rental.start_time,
+        end_time !== undefined ? end_time : rental.end_time,
+        new_daily_rate,
         total_amount,
         deposit !== undefined ? deposit : rental.deposit,
-        actual_return_date,
+        actual_return_date !== undefined ? actual_return_date : rental.actual_return_date,
         status || rental.status,
         notes !== undefined ? notes : rental.notes,
         req.params.id
