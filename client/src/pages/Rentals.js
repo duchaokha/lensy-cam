@@ -8,6 +8,8 @@ function Rentals() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [statusFilter, setStatusFilter] = useState('');
+  const [cameraFilter, setCameraFilter] = useState([]);
+  const [showCameraFilter, setShowCameraFilter] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [editingRental, setEditingRental] = useState(null);
   const [rentalType, setRentalType] = useState('daily');
@@ -31,7 +33,7 @@ function Rentals() {
 
   useEffect(() => {
     loadData();
-  }, [statusFilter]);
+  }, [statusFilter, cameraFilter]);
 
   const loadData = async () => {
     try {
@@ -43,9 +45,16 @@ function Rentals() {
       ]);
       
       // Sort rentals by start_date (oldest first)
-      const sortedRentals = rentalsData.sort((a, b) => {
+      let sortedRentals = rentalsData.sort((a, b) => {
         return new Date(a.start_date) - new Date(b.start_date);
       });
+      
+      // Filter by selected cameras if any
+      if (cameraFilter.length > 0) {
+        sortedRentals = sortedRentals.filter(rental => 
+          cameraFilter.includes(rental.camera_id.toString())
+        );
+      }
       
       setRentals(sortedRentals);
       setCameras(camerasData);
@@ -55,6 +64,16 @@ function Rentals() {
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleCameraFilterChange = (cameraId) => {
+    setCameraFilter(prev => {
+      if (prev.includes(cameraId)) {
+        return prev.filter(id => id !== cameraId);
+      } else {
+        return [...prev, cameraId];
+      }
+    });
   };
 
   const getRowColor = (rental, index) => {
@@ -210,6 +229,75 @@ function Rentals() {
               <option value="completed">Hoàn thành</option>
               <option value="cancelled">Đã hủy</option>
             </select>
+            
+            <div style={{ position: 'relative', display: 'inline-block' }}>
+              <button
+                onClick={() => setShowCameraFilter(!showCameraFilter)}
+                className="btn btn-secondary"
+                style={{ display: 'flex', alignItems: 'center', gap: '5px' }}
+              >
+                Lọc máy ảnh {cameraFilter.length > 0 && `(${cameraFilter.length})`}
+                <span style={{ fontSize: '12px' }}>{showCameraFilter ? '▲' : '▼'}</span>
+              </button>
+              
+              {showCameraFilter && (
+                <div style={{ 
+                  position: 'absolute',
+                  top: '100%',
+                  left: 0,
+                  marginTop: '5px',
+                  display: 'flex', 
+                  flexDirection: 'column', 
+                  gap: '5px',
+                  padding: '12px',
+                  border: '1px solid #ddd',
+                  borderRadius: '4px',
+                  backgroundColor: '#fff',
+                  maxHeight: '300px',
+                  overflowY: 'auto',
+                  minWidth: '200px',
+                  boxShadow: '0 2px 8px rgba(0,0,0,0.15)',
+                  zIndex: 1000
+                }}>
+                  <div style={{ fontWeight: '500', marginBottom: '5px', fontSize: '14px', borderBottom: '1px solid #eee', paddingBottom: '8px' }}>
+                    Chọn máy ảnh:
+                  </div>
+                  {cameras.map(camera => (
+                    <label key={camera.id} style={{ 
+                      display: 'flex', 
+                      alignItems: 'center', 
+                      gap: '8px',
+                      cursor: 'pointer',
+                      fontSize: '14px',
+                      padding: '4px',
+                      borderRadius: '3px',
+                      transition: 'background-color 0.2s'
+                    }}
+                    onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#f5f5f5'}
+                    onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
+                    >
+                      <input
+                        type="checkbox"
+                        checked={cameraFilter.includes(camera.id.toString())}
+                        onChange={() => handleCameraFilterChange(camera.id.toString())}
+                        style={{ cursor: 'pointer' }}
+                      />
+                      <span>{camera.name}</span>
+                    </label>
+                  ))}
+                </div>
+              )}
+            </div>
+            
+            {cameraFilter.length > 0 && (
+              <button 
+                onClick={() => setCameraFilter([])} 
+                className="btn btn-secondary btn-small"
+                style={{ marginLeft: '10px' }}
+              >
+                Xóa bộ lọc
+              </button>
+            )}
           </div>
           <button onClick={() => openModal()} className="btn btn-primary">
             + Thêm Đơn Thuê
