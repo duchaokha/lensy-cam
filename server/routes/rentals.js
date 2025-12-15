@@ -85,8 +85,8 @@ router.post('/', async (req, res) => {
       return res.status(404).json({ error: 'Camera not found' });
     }
 
-    // Check for date conflicts with existing active rentals
-    const conflictingRental = await db.get(
+    // Check for date/time conflicts with existing active rentals
+    const conflictingRentals = await db.all(
       `SELECT * FROM rentals 
        WHERE camera_id = ? 
        AND status = 'active'
@@ -94,16 +94,25 @@ router.post('/', async (req, res) => {
       [camera_id, start_date, end_date]
     );
 
-    if (conflictingRental) {
-      return res.status(400).json({ 
-        error: 'Camera is already rented during this period',
-        conflictingRental: {
-          start_date: conflictingRental.start_date,
-          end_date: conflictingRental.end_date,
-          start_time: conflictingRental.start_time,
-          end_time: conflictingRental.end_time
-        }
-      });
+    // Check if there's a time overlap for rentals on overlapping dates
+    for (const existingRental of conflictingRentals) {
+      const newStart = new Date(`${start_date}T${start_time || '00:00'}`);
+      const newEnd = new Date(`${end_date}T${end_time || '23:59'}`);
+      const existingStart = new Date(`${existingRental.start_date}T${existingRental.start_time || '00:00'}`);
+      const existingEnd = new Date(`${existingRental.end_date}T${existingRental.end_time || '23:59'}`);
+
+      // Check if time ranges overlap
+      if (!(newEnd <= existingStart || newStart >= existingEnd)) {
+        return res.status(400).json({ 
+          error: 'Camera is already rented during this time period',
+          conflictingRental: {
+            start_date: existingRental.start_date,
+            end_date: existingRental.end_date,
+            start_time: existingRental.start_time,
+            end_time: existingRental.end_time
+          }
+        });
+      }
     }
 
     // Calculate total amount (use custom amount if provided)
