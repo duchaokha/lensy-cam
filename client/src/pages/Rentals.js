@@ -159,7 +159,7 @@ function Rentals() {
   const openModal = (rental = null) => {
     setEditingRental(rental);
     if (rental) {
-      setRentalType(rental.rental_type || 'daily');
+      setRentalType('daily');
     } else {
       setRentalType('daily');
     }
@@ -255,8 +255,11 @@ function Rentals() {
                     {rental.end_time && <><br/><span style={{ fontSize: '14px', fontWeight: '500' }}>{formatTime(rental.end_time)}</span></>}
                   </td>
                   <td>
-                    {rental.rental_type === 'hourly' ? (
-                      <span>{Math.ceil(((new Date(`2000-01-01 ${rental.end_time}`) - new Date(`2000-01-01 ${rental.start_time}`)) / (1000 * 60 * 60)))} giờ</span>
+                    {rental.start_time && rental.end_time ? (
+                      <span>
+                        {calculateDays(rental.start_date, rental.end_date)} ngày<br/>
+                        <small>{Math.ceil(((new Date(`2000-01-01 ${rental.end_time}`) - new Date(`2000-01-01 ${rental.start_time}`)) / (1000 * 60 * 60)))} giờ</small>
+                      </span>
                     ) : (
                       <span>{calculateDays(rental.start_date, rental.end_date)} ngày</span>
                     )}
@@ -319,20 +322,6 @@ function Rentals() {
             </div>
 
             <form key={editingRental?.id || 'new'} onSubmit={handleSubmit}>
-              <div className="form-group">
-                <label>Loại thuê *</label>
-                <select 
-                  value={rentalType} 
-                  onChange={(e) => setRentalType(e.target.value)}
-                  disabled={!!editingRental}
-                  required
-                >
-                  <option value="daily">Thuê theo ngày</option>
-                  <option value="hourly">Thuê theo giờ</option>
-                </select>
-                {editingRental && <small>Không thể thay đổi loại thuê khi sửa</small>}
-              </div>
-
               {!editingRental && (
                 <>
                   <div className="form-group">
@@ -347,8 +336,8 @@ function Rentals() {
                     >
                       <option value="">Chọn máy ảnh</option>
                       {cameras.map((camera) => {
-                        const rate = rentalType === 'hourly' ? camera.hourly_rate : camera.daily_rate;
-                        const rateLabel = rentalType === 'hourly' ? '/giờ' : '/ngày';
+                        const rate = camera.daily_rate;
+                        const rateLabel = '/ngày';
                         return (
                           <option key={camera.id} value={camera.id}>
                             {camera.name} - {camera.brand} {camera.model} 
@@ -359,7 +348,7 @@ function Rentals() {
                         );
                       })}
                     </select>
-                    <small>Bạn có thể chọn bất kỳ máy ảnh nào. Hệ thống sẽ kiểm tra xung đột {rentalType === 'hourly' ? 'thời gian' : 'ngày'}.</small>
+                    <small>Bạn có thể chọn bất kỳ máy ảnh nào. Hệ thống sẽ kiểm tra xung đột ngày và thời gian.</small>
                   </div>
 
                   <div className="form-group">

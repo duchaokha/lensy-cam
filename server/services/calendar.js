@@ -66,8 +66,7 @@ class CalendarService {
       // Build event time
       let eventStart, eventEnd;
       
-      if (rental_type === 'hourly') {
-        // For hourly rentals, use specific date-time
+      if (start_time && end_time) {
         eventStart = {
           dateTime: `${start_date}T${start_time}:00`,
           timeZone: 'Asia/Ho_Chi_Minh',
@@ -77,27 +76,15 @@ class CalendarService {
           timeZone: 'Asia/Ho_Chi_Minh',
         };
       } else {
-        // For daily rentals, use all-day events if no time specified
-        if (start_time && end_time) {
-          eventStart = {
-            dateTime: `${start_date}T${start_time}:00`,
-            timeZone: 'Asia/Ho_Chi_Minh',
-          };
-          eventEnd = {
-            dateTime: `${end_date}T${end_time}:00`,
-            timeZone: 'Asia/Ho_Chi_Minh',
-          };
-        } else {
-          eventStart = {
-            date: start_date,
-          };
-          // For all-day events, end date should be the day after
-          const endDateObj = new Date(end_date);
-          endDateObj.setDate(endDateObj.getDate() + 1);
-          eventEnd = {
-            date: endDateObj.toISOString().split('T')[0],
-          };
-        }
+        eventStart = {
+          date: start_date,
+        };
+        // For all-day events, end date should be the day after
+        const endDateObj = new Date(end_date);
+        endDateObj.setDate(endDateObj.getDate() + 1);
+        eventEnd = {
+          date: endDateObj.toISOString().split('T')[0],
+        };
       }
 
       const event = {
@@ -149,7 +136,7 @@ class CalendarService {
 
       let eventStart, eventEnd;
       
-      if (rental_type === 'hourly') {
+      if (start_time && end_time) {
         eventStart = {
           dateTime: `${start_date}T${start_time}:00`,
           timeZone: 'Asia/Ho_Chi_Minh',
@@ -159,21 +146,10 @@ class CalendarService {
           timeZone: 'Asia/Ho_Chi_Minh',
         };
       } else {
-        if (start_time && end_time) {
-          eventStart = {
-            dateTime: `${start_date}T${start_time}:00`,
-            timeZone: 'Asia/Ho_Chi_Minh',
-          };
-          eventEnd = {
-            dateTime: `${end_date}T${end_time}:00`,
-            timeZone: 'Asia/Ho_Chi_Minh',
-          };
-        } else {
-          eventStart = { date: start_date };
-          const endDateObj = new Date(end_date);
-          endDateObj.setDate(endDateObj.getDate() + 1);
-          eventEnd = { date: endDateObj.toISOString().split('T')[0] };
-        }
+        eventStart = { date: start_date };
+        const endDateObj = new Date(end_date);
+        endDateObj.setDate(endDateObj.getDate() + 1);
+        eventEnd = { date: endDateObj.toISOString().split('T')[0] };
       }
 
       const event = {

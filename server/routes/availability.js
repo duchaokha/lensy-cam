@@ -71,8 +71,8 @@ router.get('/', async (req, res) => {
     let query;
     let params;
 
-    if (rental_type === 'hourly' && start_time && end_time) {
-      // For hourly rentals on the same day
+    // Check for date overlaps and optional time conflicts
+    if (start_time && end_time) {
       query = `
         SELECT c.*
         FROM cameras c
@@ -81,20 +81,17 @@ router.get('/', async (req, res) => {
             SELECT r.camera_id
             FROM rentals r
             WHERE r.status IN ('active', 'overdue')
+              AND r.start_date <= ?
+              AND r.end_date >= ?
               AND (
-                -- Conflicts with daily rentals that overlap the date
-                (r.rental_type = 'daily' AND r.start_date <= ? AND r.end_date >= ?)
-                OR
-                -- Conflicts with hourly rentals on same date with overlapping times
-                (r.rental_type = 'hourly' AND r.start_date = ? 
-                 AND r.start_time < ? AND r.end_time > ?)
+                r.start_time IS NULL OR r.end_time IS NULL
+                OR NOT (r.end_time <= ? OR r.start_time >= ?)
               )
           )
         ORDER BY c.name
       `;
-      params = [start_date, start_date, start_date, end_time, start_time];
+      params = [end_date, start_date, start_time, end_time];
     } else {
-      // For daily rentals
       query = `
         SELECT c.*
         FROM cameras c

@@ -140,7 +140,6 @@ function Cameras() {
                   <td>{camera.category}</td>
                   <td>{camera.serial_number || 'N/A'}</td>
                   <td>{formatCurrency(camera.daily_rate)}</td>
-                  <td>{camera.hourly_rate ? formatCurrency(camera.hourly_rate) : 'N/A'}</td>
                   <td>
                     <span className={`badge badge-${
                       camera.status === 'available' ? 'success' : 'secondary'

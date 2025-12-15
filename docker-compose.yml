@@ -6,11 +6,8 @@ services:
     container_name: lensy-cam-app
     ports:
       - "0.0.0.0:8899:8899"
-    environment:
-      - NODE_ENV=production
-      - PORT=8899
-      - JWT_SECRET=${JWT_SECRET:-your-secret-key-change-this-in-production}
-      - GOOGLE_CALENDAR_ID=790cf96a431f0d9c91ca056e26c4e8b6294f5670dfbbe25c72f4375f6b30d6e3@group.calendar.google.com
+    env_file:
+      - .env
     volumes:
       # Mount database directory for easy backup
       - ./database:/app/database

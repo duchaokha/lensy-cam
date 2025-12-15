@@ -75,8 +75,8 @@ router.post('/', async (req, res) => {
   try {
     const {
       camera_id, customer_id, start_date, end_date,
-      start_time, end_time, daily_rate, hourly_rate,
-      deposit, notes, rental_type, custom_total_amount
+      start_time, end_time, daily_rate,
+      deposit, notes, custom_total_amount
     } = req.body;
 
     // Check if camera exists
@@ -149,11 +149,11 @@ router.post('/', async (req, res) => {
     const result = await db.run(
       `INSERT INTO rentals 
        (camera_id, customer_id, start_date, end_date, start_time, end_time,
-        daily_rate, hourly_rate, total_amount, deposit, notes, status, rental_type) 
-       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
-      [camera_id, customer_id, start_date, end_date || start_date, 
-       start_time, end_time, daily_rate, hourly_rate,
-       total_amount, deposit || 0, notes, 'active', rental_type || 'daily']
+        daily_rate, total_amount, deposit, notes, status, rental_type) 
+       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+      [camera_id, customer_id, start_date, end_date || start_date,
+       start_time, end_time, daily_rate,
+       total_amount, deposit || 0, notes, 'active', 'daily']
     );
 
     // Get the created rental with full details
@@ -196,12 +196,7 @@ router.put('/:id', async (req, res) => {
     if (custom_total_amount && parseFloat(custom_total_amount) > 0) {
       // Use custom amount provided by user
       total_amount = parseFloat(custom_total_amount);
-    } else if (currentRentalType === 'hourly' && start_time && end_time && hourly_rate) {
-      const startDateTime = new Date(`2000-01-01 ${start_time}`);
-      const endDateTime = new Date(`2000-01-01 ${end_time}`);
-      const hours = Math.ceil((endDateTime - startDateTime) / (1000 * 60 * 60));
-      total_amount = hours * hourly_rate;
-    } else if (currentRentalType === 'daily' && start_date && end_date && daily_rate) {
+    } else if (start_date && end_date && daily_rate) {
       const start = new Date(start_date);
       const end = new Date(end_date);
       const days = Math.ceil((end - start) / (1000 * 60 * 60 * 24)) + 1;

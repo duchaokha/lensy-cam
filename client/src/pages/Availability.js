@@ -24,10 +24,7 @@ function Availability() {
       return;
     }
 
-    if (rentalType === 'hourly' && (!searchParams.start_time || !searchParams.end_time)) {
-      setError('Vui lòng chọn giờ bắt đầu và kết thúc cho thuê theo giờ');
-      return;
-    }
+
 
     setLoading(true);
     setError('');
@@ -43,13 +40,10 @@ function Availability() {
       const params = {
         start_date: searchParams.start_date,
         end_date: searchParams.end_date,
-        rental_type: rentalType
+        start_time: searchParams.start_time,
+        end_time: searchParams.end_time,
+        rental_type: 'daily'
       };
-
-      if (rentalType === 'hourly') {
-        params.start_time = searchParams.start_time;
-        params.end_time = searchParams.end_time;
-      }
 
       console.log('Checking availability with params:', params);
       const data = await api.checkAvailability(params);
@@ -101,17 +95,7 @@ function Availability() {
         </div>
 
         <form onSubmit={handleSearch}>
-          <div className="form-group">
-            <label>Loại Thuê</label>
-            <select 
-              value={rentalType} 
-              onChange={(e) => setRentalType(e.target.value)}
-              required
-            >
-              <option value="daily">Thuê Theo Ngày</option>
-              <option value="hourly">Thuê Theo Giờ</option>
-            </select>
-          </div>
+          <input type="hidden" name="rental_type" value="daily" />
 
           <div className="form-row">
             <div className="form-group">
@@ -138,10 +122,9 @@ function Availability() {
             </div>
           </div>
 
-          {rentalType === 'hourly' && (
-            <div className="form-row">
-              <div className="form-group">
-                <label>Giờ Bắt Đầu *</label>
+          <div className="form-row">
+            <div className="form-group">
+              <label>Giờ Bắt Đầu</label>
                 <input
                   type="time"
                   name="start_time"
@@ -152,19 +135,17 @@ function Availability() {
                 />
               </div>
 
-              <div className="form-group">
-                <label>Giờ Kết Thúc *</label>
-                <input
-                  type="time"
-                  name="end_time"
-                  value={searchParams.end_time}
-                  onChange={handleInputChange}
-                  step="60"
-                  required
-                />
-              </div>
+            <div className="form-group">
+              <label>Giờ Kết Thúc</label>
+              <input
+                type="time"
+                name="end_time"
+                value={searchParams.end_time}
+                onChange={handleInputChange}
+                step="60"
+              />
             </div>
-          )}
+          </div>
 
           <div style={{ display: 'flex', gap: '10px', marginTop: '20px' }}>
             <button type="submit" className="btn btn-primary" disabled={loading}>
@@ -200,9 +181,6 @@ function Availability() {
                     <p><strong>Chất lượng:</strong> {camera.condition}</p>
                     <div style={{ marginTop: '15px', paddingTop: '15px', borderTop: '1px solid #eee' }}>
                       <p><strong>Giá theo ngày:</strong> {formatCurrency(camera.daily_rate)}</p>
-                      {camera.hourly_rate && (
-                        <p><strong>Giá theo giờ:</strong> {formatCurrency(camera.hourly_rate)}</p>
-                      )}
                     </div>
                   </div>
                 </div>
