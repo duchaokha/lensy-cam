@@ -353,7 +353,7 @@ function Rentals() {
                           <option key={camera.id} value={camera.id}>
                             {camera.name} - {camera.brand} {camera.model} 
                             {rate ? ` ($${rate}${rateLabel})` : ' (Chưa đặt giá)'}
-                            {camera.status === 'rented' ? ' - Đang cho thuê' : ''}
+                            {camera.status === 'maintenance' ? ' - Bảo trì' : ''}
                             {camera.status === 'maintenance' ? ' - Đang bảo trì' : ''}
                           </option>
                         );

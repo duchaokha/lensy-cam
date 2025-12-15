@@ -1,6 +1,7 @@
 const express = require('express');
 const db = require('../database');
 const authMiddleware = require('../middleware/auth');
+const calendarService = require('../services/calendar');
 
 const router = express.Router();
 router.use(authMiddleware);
@@ -155,13 +156,19 @@ router.post('/', async (req, res) => {
        total_amount, deposit || 0, notes, 'active', rental_type || 'daily']
     );
 
-    // Update camera status only if rental starts today or in the past
-    const today = new Date().toISOString().split('T')[0];
-    if (start_date <= today) {
-      await db.run('UPDATE cameras SET status = ? WHERE id = ?', ['rented', camera_id]);
+    // Get the created rental with full details
+    const rental = await db.get('SELECT * FROM rentals WHERE id = ?', [result.id]);
+    
+    // Get customer details for calendar event
+    const customer = await db.get('SELECT * FROM customers WHERE id = ?', [customer_id]);
+    
+    // Create calendar event
+    const eventId = await calendarService.createRentalEvent(rental, camera, customer);
+    if (eventId) {
+      await db.run('UPDATE rentals SET calendar_event_id = ? WHERE id = ?', [eventId, result.id]);
+      rental.calendar_event_id = eventId;
     }
 
-    const rental = await db.get('SELECT * FROM rentals WHERE id = ?', [result.id]);
     res.status(201).json(rental);
   } catch (error) {
     res.status(500).json({ error: error.message });

@@ -101,7 +101,6 @@ function Cameras() {
             <select value={statusFilter} onChange={(e) => setStatusFilter(e.target.value)}>
               <option value="">Tất cả Trạng thái</option>
               <option value="available">Sẵn sàng</option>
-              <option value="rented">Đang cho thuê</option>
               <option value="maintenance">Bảo trì</option>
             </select>
           </div>
@@ -144,10 +143,9 @@ function Cameras() {
                   <td>{camera.hourly_rate ? formatCurrency(camera.hourly_rate) : 'N/A'}</td>
                   <td>
                     <span className={`badge badge-${
-                      camera.status === 'available' ? 'success' :
-                      camera.status === 'rented' ? 'warning' : 'secondary'
+                      camera.status === 'available' ? 'success' : 'secondary'
                     }`}>
-                      {camera.status}
+                      {camera.status === 'available' ? 'Sẵn sàng' : 'Bảo trì'}
                     </span>
                   </td>
                   <td>{camera.condition}</td>
@@ -306,7 +304,6 @@ function Cameras() {
                   <label>Trạng thái</label>
                   <select name="status" defaultValue={editingCamera?.status}>
                     <option value="available">Sẵn sàng</option>
-                    <option value="rented">Đang cho thuê</option>
                     <option value="maintenance">Bảo trì</option>
                   </select>
                 </div>

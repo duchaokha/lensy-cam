@@ -9,9 +9,15 @@ const customerRoutes = require('./routes/customers');
 const rentalRoutes = require('./routes/rentals');
 const dashboardRoutes = require('./routes/dashboard');
 const availabilityRoutes = require('./routes/availability');
+const calendarService = require('./services/calendar');
 
 const app = express();
 const PORT = process.env.PORT || 8899;
+
+// Initialize Google Calendar
+calendarService.initialize().catch(err => {
+  console.error('Calendar initialization error:', err);
+});
 
 // Middleware
 app.use(cors());

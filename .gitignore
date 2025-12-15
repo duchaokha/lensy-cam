@@ -5,6 +5,9 @@ client/node_modules/
 # Environment variables (sensitive)
 .env
 
+# Google Calendar service account (sensitive)
+server/config/google-service-account.json
+
 # Database files (sensitive data)
 *.db
 *.db-journal

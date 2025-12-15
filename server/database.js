@@ -91,6 +91,7 @@ class Database {
           status TEXT DEFAULT 'active',
           rental_type TEXT DEFAULT 'daily',
           notes TEXT,
+          calendar_event_id TEXT,
           created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
           FOREIGN KEY (camera_id) REFERENCES cameras(id),
           FOREIGN KEY (customer_id) REFERENCES customers(id)
@@ -110,6 +111,22 @@ class Database {
           }
         }
       );
+
+      // Migration: Add calendar_event_id column if it doesn't exist
+      this.db.all("PRAGMA table_info(rentals)", (err, columns) => {
+        if (!err) {
+          const hasCalendarEventId = columns.some(col => col.name === 'calendar_event_id');
+          if (!hasCalendarEventId) {
+            this.db.run('ALTER TABLE rentals ADD COLUMN calendar_event_id TEXT', (err) => {
+              if (err) {
+                console.error('Error adding calendar_event_id column:', err);
+              } else {
+                console.log('Added calendar_event_id column to rentals table');
+              }
+            });
+          }
+        }
+      });
     });
   }
 

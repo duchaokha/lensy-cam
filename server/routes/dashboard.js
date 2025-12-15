@@ -18,7 +18,7 @@ router.get('/stats', async (req, res) => {
     
     // Rented cameras
     const rentedCameras = await db.get(
-      "SELECT COUNT(*) as count FROM cameras WHERE status = 'rented'"
+      "SELECT COUNT(*) as count FROM cameras WHERE status = 'maintenance'"
     );
     
     // Active rentals
