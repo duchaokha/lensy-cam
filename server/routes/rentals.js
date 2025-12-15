@@ -235,6 +235,12 @@ router.put('/:id', async (req, res) => {
     // Update camera status if rental completed or cancelled
     if (status === 'completed' || status === 'cancelled') {
       await db.run('UPDATE cameras SET status = ? WHERE id = ?', ['available', rental.camera_id]);
+      
+      // Delete calendar event if rental is cancelled
+      if (status === 'cancelled' && rental.calendar_event_id) {
+        await calendarService.deleteRentalEvent(rental.calendar_event_id);
+        await db.run('UPDATE rentals SET calendar_event_id = NULL WHERE id = ?', [req.params.id]);
+      }
     }
 
     const updatedRental = await db.get('SELECT * FROM rentals WHERE id = ?', [req.params.id]);
@@ -280,6 +286,11 @@ router.delete('/:id', async (req, res) => {
     // Make camera available again if rental was active
     if (rental.status === 'active') {
       await db.run('UPDATE cameras SET status = ? WHERE id = ?', ['available', rental.camera_id]);
+    }
+
+    // Delete calendar event if exists
+    if (rental.calendar_event_id) {
+      await calendarService.deleteRentalEvent(rental.calendar_event_id);
     }
 
     await db.run('DELETE FROM rentals WHERE id = ?', [req.params.id]);
