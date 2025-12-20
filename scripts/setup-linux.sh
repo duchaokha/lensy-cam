@@ -144,6 +144,42 @@ sleep 5
 # Check if container is running
 if docker compose ps | grep -q "Up"; then
     echo ""
+    echo "📋 Step 4: Waiting for application to be fully ready..."
+    echo ""
+    
+    # Wait for app to be fully ready (check health endpoint or wait longer)
+    MAX_WAIT=30
+    WAITED=0
+    APP_READY=false
+    
+    while [ $WAITED -lt $MAX_WAIT ]; do
+        if curl -s http://localhost:8899/api/auth/login > /dev/null 2>&1; then
+            APP_READY=true
+            echo -e "${GREEN}✅ Application is ready${NC}"
+            break
+        fi
+        echo "⏳ Waiting for application... ($WAITED/$MAX_WAIT seconds)"
+        sleep 3
+        WAITED=$((WAITED + 3))
+    done
+    
+    if [ "$APP_READY" = true ]; then
+        echo ""
+        echo "📋 Step 5: Merging duplicate customers..."
+        echo ""
+        
+        # Run merge duplicates script (using fixed container name from docker-compose.yml)
+        if docker exec lensy-cam-app node /app/scripts/merge-duplicates.js 2>/dev/null; then
+            echo -e "${GREEN}✅ Duplicate customers merged${NC}"
+        else
+            echo -e "${YELLOW}⚠️  Could not merge duplicates (this is normal for new installations)${NC}"
+        fi
+    else
+        echo -e "${YELLOW}⚠️  Application took too long to start, skipping duplicate merge${NC}"
+        echo -e "${YELLOW}    You can run it manually later: docker exec lensy-cam-app node /app/scripts/merge-duplicates.js${NC}"
+    fi
+    
+    echo ""
     echo -e "${GREEN}════════════════════════════════════════${NC}"
     echo -e "${GREEN}✅ Installation Complete!${NC}"
     echo -e "${GREEN}════════════════════════════════════════${NC}"
@@ -163,6 +199,7 @@ if docker compose ps | grep -q "Up"; then
     echo "   Restart app:  docker compose restart"
     echo "   Manual backup: ./scripts/backup.sh"
     echo "   Restore DB:   ./scripts/restore.sh backups/your-backup.db"
+    echo "   Merge duplicates: docker exec lensy-cam-app node /app/scripts/merge-duplicates.js"
     echo "   View backups: crontab -l | grep backup"
     echo ""
     echo "💡 Automatic backups run every 3 hours (check logs/backup.log)"

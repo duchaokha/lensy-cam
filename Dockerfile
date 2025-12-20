@@ -16,6 +16,7 @@ RUN npm install --production --legacy-peer-deps
 
 # Copy backend files
 COPY server/ ./server/
+COPY scripts/ ./scripts/
 COPY .env.example ./.env
 
 # Copy built frontend from build stage
