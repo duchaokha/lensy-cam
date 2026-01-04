@@ -15,3 +15,8 @@
 
 # Restore data
 Example:  bash scripts/restore.sh backups/rental-20251220-131708.db
+
+# Quick start
+bash scripts/setup-linux.sh
+or
+bash scripts/setup-mac.sh
