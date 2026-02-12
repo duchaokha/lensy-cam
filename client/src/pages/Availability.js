@@ -127,6 +127,7 @@ function Availability() {
               <label>Giờ Bắt Đầu</label>
                 <input
                   type="time"
+                  lang="en-GB"
                   name="start_time"
                   value={searchParams.start_time}
                   onChange={handleInputChange}
@@ -139,6 +140,7 @@ function Availability() {
               <label>Giờ Kết Thúc</label>
               <input
                 type="time"
+                lang="en-GB"
                 name="end_time"
                 value={searchParams.end_time}
                 onChange={handleInputChange}
