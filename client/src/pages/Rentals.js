@@ -563,6 +563,7 @@ function Rentals() {
                       <label>Giờ bắt đầu *</label>
                       <input
                         type="time"
+                        lang="en-GB"
                         name="start_time"
                         defaultValue={editingRental?.start_time || '09:00'}
                         onChange={(e) => setStartTime(e.target.value)}
@@ -576,6 +577,7 @@ function Rentals() {
                       <label>Giờ kết thúc *</label>
                       <input
                         type="time"
+                        lang="en-GB"
                         name="end_time"
                         defaultValue={editingRental?.end_time || '17:00'}
                         min={startDate === endDate ? startTime : undefined}
@@ -644,6 +646,7 @@ function Rentals() {
                       <label>Giờ bắt đầu *</label>
                       <input
                         type="time"
+                        lang="en-GB"
                         name="start_time"
                         defaultValue={editingRental?.start_time || '09:00'}
                         onChange={(e) => setStartTime(e.target.value)}
@@ -656,6 +659,7 @@ function Rentals() {
                       <label>Giờ kết thúc *</label>
                       <input
                         type="time"
+                        lang="en-GB"
                         name="end_time"
                         defaultValue={editingRental?.end_time || '17:00'}
                         min={startTime}
